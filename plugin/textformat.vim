@@ -31,8 +31,6 @@
 "
 " }}}
 
-" Commands and mappings {{{1
-
 command! -nargs=? -range AlignLeft <line1>,<line2>call textformat#Align_Command('left',<args>)
 command! -nargs=? -range AlignRight <line1>,<line2>call textformat#Align_Command('right',<args>)
 command! -nargs=? -range AlignJustify <line1>,<line2>call textformat#Align_Command('justify',<args>)
@@ -65,5 +63,3 @@ call s:Add_Mapping('v', '<Leader>aj', '<Plug>Align_Range_Justify')
 call s:Add_Mapping('v', '<Leader>ac', '<Plug>Align_Range_Center')
 
 delfunction s:Add_Mapping
-
-" vim600: fdm=marker
