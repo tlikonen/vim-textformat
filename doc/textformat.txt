@@ -1,10 +1,11 @@
-*textformat.txt*	Vim Text Formatter  (version 1.0)	    2008-07-31
+*textformat.txt*	Vim Text Formatter  (version 1.0)	    2008-08-01
 
 
 Description	This plugin provides commands and key mappings to quickly
 		align and format text. Text can be aligned to either left or
 		right margin or justified to both margins. Also centering of
-		text is supported.
+		text is supported. The text formatting commands in this plugin
+		are a bit different from those integrated to Vim.
 
 Author		Teemu Likonen <tlikonen@iki.fi>
 
@@ -202,10 +203,10 @@ line-by-line, just like their command line equivalents: :AlignLeft,
 ==============================================================================
 4. User key mappings			    	    *textformat-mappings-user*
 
-Key mappings can be configured freely by user. This plugin uses the defaults
-only if they are free and not mapped to some other key. You know, this is
-a general-purpose tool which is likely loaded automatically when Vim starts.
-We try to be as non-intrusive as possible.
+The key mappings can be configured freely by user. This plugin uses the
+default ones only if they are free and not mapped to some other things. We try
+to be non-intrusive because this is a general-purpose tool which is likely
+loaded automatically when Vim starts.
 
 Here's an example of lines you could put in your .vimrc file: >
 
@@ -222,10 +223,11 @@ Here's an example of lines you could put in your .vimrc file: >
 That is, |:nmap| command defines mappings for normal mode and |:vmap| for
 visual mode. Function keys from <F5> to <F8> are used in this example. The
 rest of the line is a code word defined by this plugin; they tell Vim what to
-do. I think the code words are pretty much self-descriptive. Don't use
-|:nnoremap| and |:vnoremap| commands, they don't work because the right-hand
-side (<Plug>...) must be remappable. See Vim's manual for more information
-about mapping commands.
+do. I think the code words are pretty much self-descriptive.
+
+Don't use |:nnoremap| and |:vnoremap| commands here; they don't work because
+the right-hand side (<Plug>...) must be remappable. See Vim's manual for more
+information about mapping commands.
 
 Happy formatting!
 
