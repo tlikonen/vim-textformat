@@ -34,14 +34,14 @@
 " Constant variables(s) {{{1
 let s:default_width = 80
 
-function! textformat#Align_Range_Left(...) range "{{{1
+function! s:Align_Range_Left(...) range "{{{1
 	if a:0 > 0 && a:1 >= 0
 		let l:start_ws = repeat(' ',a:1)
-		let l:line_replace = textformat#Align_String_Left(getline(a:firstline))
+		let l:line_replace = s:Align_String_Left(getline(a:firstline))
 		call setline(a:firstline,l:start_ws.l:line_replace)
 	else
 		let l:start_ws = substitute(getline(a:firstline),'\m\S.*','','')
-		let l:line_replace = textformat#Align_String_Left(getline(a:firstline))
+		let l:line_replace = s:Align_String_Left(getline(a:firstline))
 		call setline(a:firstline,l:start_ws.l:line_replace)
 		if match(&formatoptions,'2') >= 0 && a:lastline > a:firstline
 			let l:start_ws = substitute(getline(a:firstline+1),'\m\S.*','','')
@@ -49,14 +49,14 @@ function! textformat#Align_Range_Left(...) range "{{{1
 	endif
 	for l:i in range(a:lastline-a:firstline)
 		let l:line = a:firstline + 1 + l:i
-		let l:line_replace = textformat#Align_String_Left(getline(l:line))
+		let l:line_replace = s:Align_String_Left(getline(l:line))
 		call setline(l:line,l:start_ws.l:line_replace)
 	endfor
 	execute a:firstline.','a:lastline.'retab!'
 endfunction
 
-function! textformat#Align_Range_Right(width) "{{{1
-	let l:line_replace = textformat#Align_String_Right(getline('.'),a:width)
+function! s:Align_Range_Right(width) "{{{1
+	let l:line_replace = s:Align_String_Right(getline('.'),a:width)
 	if l:line_replace =~ '\v^ *$'
 		call setline(line('.'),'')
 	else
@@ -64,11 +64,11 @@ function! textformat#Align_Range_Right(width) "{{{1
 	endif
 endfunction
 
-function! textformat#Align_Range_Justify(width, ...) range "{{{1
+function! s:Align_Range_Justify(width, ...) range "{{{1
 	let l:start_ws = substitute(getline(a:firstline),'\m\S.*','','')
 	normal! ^
 	let l:width = a:width-virtcol('.')+1
-	let l:line_replace = substitute(l:start_ws.textformat#Align_String_Justify(getline(a:firstline),l:width),'\m\s*$','','')
+	let l:line_replace = substitute(l:start_ws.s:Align_String_Justify(getline(a:firstline),l:width),'\m\s*$','','')
 	call setline(a:firstline,l:line_replace)
 	if match(&formatoptions,'2') >= 0 && a:lastline > a:firstline
 		let l:start_ws = substitute(getline(a:firstline+1),'\m\S.*','','')
@@ -81,20 +81,20 @@ function! textformat#Align_Range_Justify(width, ...) range "{{{1
 		if l:line == a:lastline && a:0
 			call setline(l:line,l:start_ws.s:Truncate_Spaces(getline(l:line)))
 		else
-			let l:line_replace = substitute(l:start_ws.textformat#Align_String_Justify(getline(l:line),l:width),'\m\s*$','','')
+			let l:line_replace = substitute(l:start_ws.s:Align_String_Justify(getline(l:line),l:width),'\m\s*$','','')
 			call setline(l:line,l:line_replace)
 		endif
 	endfor
 endfunction
 
-function! textformat#Align_Range_Center(width) "{{{1
+function! s:Align_Range_Center(width) "{{{1
 	let l:line_replace = s:Truncate_Spaces(getline('.'))
 	let l:line_replace = s:Add_Double_Spacing(l:line_replace)
 	call setline(line('.'),l:line_replace)
 	execute 'center '.a:width
 endfunction
 
-function! textformat#Align_String_Left(string, ...) "{{{1
+function! s:Align_String_Left(string, ...) "{{{1
 	let l:string_replace = s:Truncate_Spaces(a:string)
 	let l:string_replace = s:Add_Double_Spacing(l:string_replace)
 	if a:0 && a:1
@@ -106,7 +106,7 @@ function! textformat#Align_String_Left(string, ...) "{{{1
 	endif
 endfunction
 
-function! textformat#Align_String_Right(string, width) "{{{1
+function! s:Align_String_Right(string, width) "{{{1
 	let l:string_replace = s:Truncate_Spaces(a:string)
 	let l:string_replace = s:Add_Double_Spacing(l:string_replace)
 	let l:string_width = s:String_Width(l:string_replace)
@@ -114,7 +114,7 @@ function! textformat#Align_String_Right(string, width) "{{{1
 	return repeat(' ',l:more_spaces).l:string_replace
 endfunction
 
-function! textformat#Align_String_Justify(string, width) "{{{1
+function! s:Align_String_Justify(string, width) "{{{1
 	let l:string = s:Truncate_Spaces(a:string)
 	" Jos merkkijono on tyhjä, palautetaan vain leveyden verran
 	" välilyöntejä.
@@ -336,7 +336,7 @@ function! textformat#Quick_Align_Left() "{{{1
 	let l:autoindent = &autoindent
 	let l:formatoptions = &formatoptions
 	setlocal autoindent formatoptions-=w
-	silent normal! vip:call textformat#Align_Range_Left()
+	silent normal! vip:call s:Align_Range_Left()
 	silent normal! gwip
 	call setpos('.',l:pos)
 	let &l:formatoptions = l:formatoptions
@@ -347,7 +347,7 @@ function! textformat#Quick_Align_Right() "{{{1
 	let l:width = &textwidth
 	if l:width == 0 | let l:width = s:default_width | endif
 	let l:pos = getpos('.')
-	silent normal! vip:call textformat#Align_Range_Right(l:width)
+	silent normal! vip:call s:Align_Range_Right(l:width)
 	call setpos('.',l:pos)
 endfunction
 
@@ -359,7 +359,7 @@ function! textformat#Quick_Align_Justify() "{{{1
 	setlocal nojoinspaces
 	call textformat#Quick_Align_Left()
 	let &l:joinspaces = l:joinspaces
-	silent normal! vip:call textformat#Align_Range_Justify(l:width,1)
+	silent normal! vip:call s:Align_Range_Justify(l:width,1)
 	call setpos('.',l:pos)
 endfunction
 
@@ -369,7 +369,7 @@ function! textformat#Quick_Align_Center() "{{{1
 	setlocal expandtab
 	if l:width == 0 | let l:width = s:default_width  | endif
 	let l:pos = getpos('.')
-	silent normal! vip:call textformat#Align_Range_Center(l:width)
+	silent normal! vip:call s:Align_Range_Center(l:width)
 	call setpos('.',l:pos)
 	let &l:expandtab = l:expandtab
 endfunction
@@ -377,9 +377,9 @@ endfunction
 function! textformat#Align_Command(align, ...) range "{{{1
 	if a:align == 'left'
 		if a:0 && a:1 >= 0
-			execute a:firstline.','.a:lastline.'call textformat#Align_Range_Left('.a:1.')'
+			execute a:firstline.','.a:lastline.'call s:Align_Range_Left('.a:1.')'
 		else
-			execute a:firstline.','.a:lastline.'call textformat#Align_Range_Left()'
+			execute a:firstline.','.a:lastline.'call s:Align_Range_Left()'
 		endif
 	else
 		if a:0 && a:1 > 0
@@ -390,11 +390,11 @@ function! textformat#Align_Command(align, ...) range "{{{1
 			let l:width = s:default_width
 		endif
 		if a:align == 'right'
-			execute a:firstline.','.a:lastline.'call textformat#Align_Range_Right('.l:width.')'
+			execute a:firstline.','.a:lastline.'call s:Align_Range_Right('.l:width.')'
 		elseif a:align == 'justify'
-			execute a:firstline.','.a:lastline.'call textformat#Align_Range_Justify('.l:width.')'
+			execute a:firstline.','.a:lastline.'call s:Align_Range_Justify('.l:width.')'
 		elseif a:align == 'center'
-			execute a:firstline.','.a:lastline.'call textformat#Align_Range_Center('.l:width.')'
+			execute a:firstline.','.a:lastline.'call s:Align_Range_Center('.l:width.')'
 		endif
 	endif
 endfunction
