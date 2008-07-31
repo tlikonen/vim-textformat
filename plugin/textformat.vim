@@ -6,7 +6,7 @@
 "
 " Version:    1.0
 " Maintainer: Teemu Likonen <tlikonen@iki.fi>
-" GetLatestVimScripts: xxx 1 :AutoInstall: TextFormat.vim
+" GetLatestVimScripts: xxx 1 :AutoInstall: textformat.vim
 "
 " {{{ Copyright and license
 "
