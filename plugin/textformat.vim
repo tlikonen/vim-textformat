@@ -63,3 +63,5 @@ call s:Add_Mapping('v', '<Leader>aj', '<Plug>Align_Range_Justify')
 call s:Add_Mapping('v', '<Leader>ac', '<Plug>Align_Range_Center')
 
 delfunction s:Add_Mapping
+
+" vim600: fdm=marker
