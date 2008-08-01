@@ -5,9 +5,9 @@
 " both margins or centered. The text formatting commands in this plugin are
 " a bit different from those integrated to Vim.
 "
-" Version:    1.0
+" Version:    0.9
 " Maintainer: Teemu Likonen <tlikonen@iki.fi>
-" GetLatestVimScripts: 0 1 :AutoInstall: textformat.vim
+" GetLatestVimScripts: 0 0 :AutoInstall: textformat.vim
 "
 " {{{ Copyright and license
 "
