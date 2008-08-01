@@ -37,10 +37,13 @@ let s:default_width = 80
 
 function! s:Align_Range_Left(...) range "{{{1
 	if a:0 > 0 && a:1 >= 0
+		" If [indent] is given align the first line accordingly
 		let l:start_ws = repeat(' ',a:1)
 		let l:line_replace = s:Align_String_Left(getline(a:firstline))
 		call setline(a:firstline,l:start_ws.l:line_replace)
 	else
+		" If [indent] is not given get the indent of the first line
+		" (and possibly the second too in case fo+=2).
 		let l:start_ws = substitute(getline(a:firstline),'\m\S.*','','')
 		let l:line_replace = s:Align_String_Left(getline(a:firstline))
 		call setline(a:firstline,l:start_ws.l:line_replace)
@@ -48,17 +51,20 @@ function! s:Align_Range_Left(...) range "{{{1
 			let l:start_ws = substitute(getline(a:firstline+1),'\m\S.*','','')
 		endif
 	endif
+	" Align the rest of the lines
 	for l:i in range(a:lastline-a:firstline)
 		let l:line = a:firstline + 1 + l:i
 		let l:line_replace = s:Align_String_Left(getline(l:line))
 		call setline(l:line,l:start_ws.l:line_replace)
 	endfor
+	" Honor user's expandtab setting
 	execute a:firstline.','.a:lastline.'retab!'
 endfunction
 
 function! s:Align_Range_Right(width) "{{{1
 	let l:line_replace = s:Align_String_Right(getline('.'),a:width)
 	if l:line_replace =~ '\v^ *$'
+		" If line would be full of spaces just print empty line.
 		call setline(line('.'),'')
 	else
 		call setline(line('.'),l:line_replace)
@@ -66,26 +72,36 @@ function! s:Align_Range_Right(width) "{{{1
 endfunction
 
 function! s:Align_Range_Justify(width, ...) range "{{{1
+	" Get the indent of the first line.
 	let l:start_ws = substitute(getline(a:firstline),'\m\S.*','','')
+	" 'textwidth' minus indent to get the actual text area width
 	normal! ^
 	let l:width = a:width-virtcol('.')+1
 	let l:line_replace = substitute(l:start_ws.s:Align_String_Justify(getline(a:firstline),l:width),'\m\s*$','','')
 	call setline(a:firstline,l:line_replace)
+	" If fo+=2 and range is more than one line get the indent of the
+	" second line.
 	if match(&formatoptions,'2') >= 0 && a:lastline > a:firstline
 		let l:start_ws = substitute(getline(a:firstline+1),'\m\S.*','','')
 		execute a:firstline+1
 		normal! ^
 		let l:width = a:width-virtcol('.')+1
 	endif
+	" Justify all the lines in range
 	for l:i in range(a:lastline-a:firstline)
 		let l:line = a:firstline + 1 + l:i
 		if l:line == a:lastline && a:0
+			" Align the last line to left
 			call setline(l:line,l:start_ws.s:Truncate_Spaces(getline(l:line)))
 		else
+			" Other lines left-right justified
 			let l:line_replace = substitute(l:start_ws.s:Align_String_Justify(getline(l:line),l:width),'\m\s*$','','')
 			call setline(l:line,l:line_replace)
 		endif
 	endfor
+	" retab isn't a good idea here because spaces between words might be
+	" converted to tabs.
+	"execute a:firstline.','.a:lastline.'retab!'
 endfunction
 
 function! s:Align_Range_Center(width) "{{{1
@@ -99,6 +115,9 @@ function! s:Align_String_Left(string, ...) "{{{1
 	let l:string_replace = s:Truncate_Spaces(a:string)
 	let l:string_replace = s:Add_Double_Spacing(l:string_replace)
 	if a:0 && a:1
+		" If optional width argument is given (and is non-zero) we pad
+		" the rest of string with spaces. Currently this code path is
+		" never needed.
 		let l:string_width = s:String_Width(l:string_replace)
 		let l:more_spaces = a:1-l:string_width
 		return l:string_replace.repeat(' ',l:more_spaces)
@@ -117,58 +136,61 @@ endfunction
 
 function! s:Align_String_Justify(string, width) "{{{1
 	let l:string = s:Truncate_Spaces(a:string)
-	" Jos merkkijono on tyhjä, palautetaan vain leveyden verran
-	" välilyöntejä.
+	" If the parameter string is empty we can just return a line full of
+	" spaces. No need to go further.
 	if l:string =~ '\v^ *$'
 		return repeat(' ',a:width)
 	endif
 	let l:string_width = s:String_Width(l:string)
 	if l:string_width >= a:width
-		" Merkkijono on pidempi tai yhtä suuri kuin toivottu leveys,
-		" joten palautetaan merkkijono jo tässä vaiheessa. Välejä ei
-		" tarvitse lisätä.
+		" The original string is longer than width so we can just
+		" return the string. No need to go further.
 		return l:string
 	endif
 
-	" Montako lisävälilyöntiä tarvitaan?
+	" This many extra spaces we need.
 	let l:more_spaces = a:width-l:string_width
-	" Tehdään merkkijonon sanoista lista.
+	" Convert the string to a list of words.
 	let l:word_list = split(l:string)
-	" Lasketaan välilyönnit. Se on sanojen määrä vähennettynä yhdellä.
+	" This is the amount of spaces available in the original string (word
+	" count minus one).
 	let l:string_spaces = len(l:word_list)-1
-	" Jos välejä on 0, se tarkoittaa, että sanoja on vain yksi ja se taas
-	" tarkoittaa, että lisätään välilyönnit vain loppuun ja poistutaan.
+	" If there are no spaces there is only one word. We can just return
+	" the string with padded spaces. No need to go further.
 	if l:string_spaces == 0
 		return l:string.repeat(' ',l:more_spaces)
 	endif
-	" Okei, sanoja on vähintään kaksi, joten päästään tositoimiin...
+	" Ok, there are more than one word in the string so we get to do some
+	" real work...
 
-	" Tehdään välilyönneille lista, jossa jokaisen osan arvona on
-	" valmiiksi 1. Siis näin: [1, 1, 1, 1, ...]
+	" Make a list which each item represent a space available in the
+	" string. The value means how many spaces there are. At the moment set
+	" every list item to one: [1, 1, 1, 1, ...]
 	let l:space_list = []
 	for l:item in range(l:string_spaces)
 		let l:space_list += [1]
 	endfor
 
+	" Repeat while there are no more need to add any spaces.
 	while l:more_spaces > 0
 		if l:more_spaces >= l:string_spaces
-			" Lisätään yksi välilyönti jokaiseen kohtaan.
+			" More extra spaces are needed than there are spaces
+			" available in the string so we add one more space to
+			" after every word (add 1 to items of space list).
 			for l:i in range(l:string_spaces)
 				let l:space_list[l:i] += 1
 			endfor
-			" Vähennetään jäljellä olevien välilyöntien määrää.
 			let l:more_spaces -= l:string_spaces
-			" Ja sitten uusi kierros.
+			" And then another round... and a check if more spaces
+			" are needed.
 		else " l:more_spaces < l:string_spaces
-
-			" Tämä lista kertoo, missä väleissä on
-			" päättövälimerkki [.?!]
+			" This list tells where .?! characters are.
 			let l:space_sentence_full = []
-			" Tämä kertoo, missä väleissä on [,:;].
+			" This list tells where ,:; characters are.
 			let l:space_sentence_semi = []
-			" Tämä kertoo muut kohdat:
+			" And this is for the rest of spaces.
 			let l:space_other = []
-
+			" Now, find those things:
 			for l:i in range(l:string_spaces)
 				if match(l:word_list[l:i],'\m\S[.?!]$') >= 0
 					let l:space_sentence_full += [l:i]
@@ -179,28 +201,37 @@ function! s:Align_String_Justify(string, width) "{{{1
 				endif
 			endfor
 
-			" Käydään läpi [.?!]
+			" First distribute spaces after .?!
 			if l:more_spaces >= len(l:space_sentence_full)
+				" If we need more extra spaces than there are
+				" .?! spaces, just add one after every item.
 				for l:i in l:space_sentence_full
 					let l:space_list[l:i] += 1
 				endfor
 				let l:more_spaces -= len(l:space_sentence_full)
 				if l:more_spaces == 0 | break | endif
 			else
+				" Distribute the rest of spaces evenly and
+				" break the loop. All the spaces are added.
 				for l:i in s:Distributed_Selection(l:space_sentence_full,l:more_spaces)
 					let l:space_list[l:i] +=1
 				endfor
 				break
 			endif
 
-			" Käydään läpi [,:;]
+			" Then distribute spaces after ,:;
 			if l:more_spaces >= len(l:space_sentence_semi)
+				" If we need more extra spaces than there are
+				" ,:; spaces available, just add one after
+				" every item.
 				for l:i in l:space_sentence_semi
 					let l:space_list[l:i] += 1
 				endfor
 				let l:more_spaces -= len(l:space_sentence_semi)
 				if l:more_spaces == 0 | break | endif
 			else
+				" Distribute the rest of spaces evenly and
+				" break the loop. All the spaces are added.
 				for l:i in s:Distributed_Selection(l:space_sentence_semi,l:more_spaces)
 					let l:space_list[l:i] +=1
 				endfor
@@ -216,14 +247,13 @@ function! s:Align_String_Justify(string, width) "{{{1
 		endif
 	endwhile
 
-	" Muodostetaan listan perusteella uusi merkkijono. Kunkin sanan perään
-	" laitetaan välilyönnit taulukon mukaan.
+	" Now we now where all the extra spaces will go. We have to construct
+	" the string again.
 	let l:string = ''
 	for l:item in range(l:string_spaces)
 		let l:string .= l:word_list[l:item].repeat(' ',l:space_list[l:item])
 	endfor
-	" Lopuksi lisätään vielä viimeinen sana ja palautetaan koko
-	" merkkijono.
+	" Add the last word to the and and return the string.
 	return l:string.l:word_list[-1]
 endfunction
 
@@ -235,8 +265,11 @@ function! s:Truncate_Spaces(string) "{{{1
 endfunction
 
 function! s:String_Width(string) "{{{1
-	" Tänne voisi lisätä logiikkaa siitä, onko käytetty
-	" leveydettömiä tai kaksoisleveitä merkkejä.
+	" This counts the string width in characters. Combining diacritical
+	" marks do not count so the base character with all the combined
+	" diacritics is just one character (which is good for our purposes).
+	" Double-wide characters will not get double width so unfortunately
+	" they don't work in our algorithm.
 	return strlen(substitute(a:string,'\m.','x','g'))
 endfunction
 
@@ -375,6 +408,9 @@ endfunction
 
 function! textformat#Quick_Align_Center() "{{{1
 	let l:width = &textwidth
+	" It's not good idea to use tabs in text area which has very different
+	" number of spaces before the lines. Plain spaces are more reliable so
+	" we set 'expandtab' variable before the operation.
 	let l:expandtab = &expandtab
 	setlocal expandtab
 	if l:width == 0 | let l:width = s:default_width  | endif
@@ -385,6 +421,8 @@ function! textformat#Quick_Align_Center() "{{{1
 endfunction
 
 function! textformat#Align_Command(align, ...) range "{{{1
+	" For the left align the optional parameter a:1 is [indent]. For
+	" others it's [width].
 	if a:align == 'left'
 		if a:0 && a:1 >= 0
 			execute a:firstline.','.a:lastline.'call s:Align_Range_Left('.a:1.')'
@@ -405,6 +443,10 @@ function! textformat#Align_Command(align, ...) range "{{{1
 		elseif a:align == 'justify'
 			execute a:firstline.','.a:lastline.'call s:Align_Range_Justify('.l:width.')'
 		elseif a:align == 'center'
+			" It's not good idea to use tabs in text area which
+			" has very different number of spaces before the
+			" lines. Plain spaces are more reliable so we set
+			" 'expandtab' variable before the operation.
 			let l:expandtab = &expandtab
 			setlocal expandtab
 			execute a:firstline.','.a:lastline.'call s:Align_Range_Center('.l:width.')'
