@@ -16,8 +16,8 @@ Contents
 
 	1. Quick start				|textformat-start|
 	2. Commands				|textformat-commands|
-	3. Default key mappings			|textformat-mappings-default|
-	4. User key mappings			|textformat-mappings-user|
+	3. Default key mappings			|textformat-keymap-default|
+	4. User key mappings			|textformat-keymap-user|
 
 ==============================================================================
 1. Quick start						    *textformat-start*
@@ -142,7 +142,7 @@ extra spaces. If you want to align text without truncating whitespaces use
 Vim's own align commands: |:left|, |:right| and |:center|.
 
 ==============================================================================
-3. Default key mappings				 *textformat-mappings-default*
+3. Default key mappings				   *textformat-keymap-default*
 
 By default this plugin provides a couple of key mappings for convenient text
 formatting. If some of the mappings have already been defined by user (or are
@@ -202,7 +202,7 @@ line-by-line, just like their command line equivalents: :AlignLeft,
 :AlignRight, :AlignJustify and :AlignCenter.
 
 ==============================================================================
-4. User key mappings			    	    *textformat-mappings-user*
+4. User key mappings				      *textformat-keymap-user*
 
 The key mappings can be configured freely by user. This plugin uses the
 default ones only if they are free and not mapped to some other things. We try
