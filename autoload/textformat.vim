@@ -396,7 +396,10 @@ function! textformat#Align_Command(align, ...) range "{{{1
 		elseif a:align == 'justify'
 			execute a:firstline.','.a:lastline.'call s:Align_Range_Justify('.l:width.')'
 		elseif a:align == 'center'
+			let l:expandtab = &expandtab
+			setlocal expandtab
 			execute a:firstline.','.a:lastline.'call s:Align_Range_Center('.l:width.')'
+			let &l:expandtab = l:expandtab
 		endif
 	endif
 endfunction
