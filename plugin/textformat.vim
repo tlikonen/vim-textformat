@@ -2,11 +2,12 @@
 "
 " This plugin provides commands and key mappings to quickly align and format
 " text. Text can be aligned to either left or right margin or justified to
-" both margins. Also centering is supported.
+" both margins or centered. The text formatting commands in this plugin are
+" a bit different from those integrated to Vim.
 "
 " Version:    1.0
 " Maintainer: Teemu Likonen <tlikonen@iki.fi>
-" GetLatestVimScripts: xxx 1 :AutoInstall: textformat.vim
+" GetLatestVimScripts: 0 1 :AutoInstall: textformat.vim
 "
 " {{{ Copyright and license
 "
