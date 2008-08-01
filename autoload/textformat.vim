@@ -242,7 +242,7 @@ endfunction
 
 function! s:Add_Double_Spacing(string) "{{{1
 	if &joinspaces
-		return substitute(a:string,'\m\k[.?!] ','& ','g')
+		return substitute(a:string,'\m\S[.?!] ','& ','g')
 	else
 		return a:string
 	endif
