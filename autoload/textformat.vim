@@ -7,7 +7,7 @@
 "
 " Version:    0.9
 " Maintainer: Teemu Likonen <tlikonen@iki.fi>
-" GetLatestVimScripts: 0 0 :AutoInstall: textformat.vim
+" GetLatestVimScripts: 2324 1 :AutoInstall: textformat.vim
 "
 " {{{ Copyright and license
 "
