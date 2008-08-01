@@ -57,8 +57,6 @@ function! s:Align_Range_Left(...) range "{{{1
 		let l:line_replace = s:Align_String_Left(getline(l:line))
 		call setline(l:line,l:start_ws.l:line_replace)
 	endfor
-	" Honor user's expandtab setting
-	execute a:firstline.','.a:lastline.'retab!'
 endfunction
 
 function! s:Align_Range_Right(width) "{{{1
@@ -99,9 +97,6 @@ function! s:Align_Range_Justify(width, ...) range "{{{1
 			call setline(l:line,l:line_replace)
 		endif
 	endfor
-	" retab isn't a good idea here because spaces between words might be
-	" converted to tabs.
-	"execute a:firstline.','.a:lastline.'retab!'
 endfunction
 
 function! s:Align_Range_Center(width) "{{{1
