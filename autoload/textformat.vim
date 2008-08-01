@@ -52,7 +52,7 @@ function! s:Align_Range_Left(...) range "{{{1
 		let l:line_replace = s:Align_String_Left(getline(l:line))
 		call setline(l:line,l:start_ws.l:line_replace)
 	endfor
-	execute a:firstline.','a:lastline.'retab!'
+	execute a:firstline.','.a:lastline.'retab!'
 endfunction
 
 function! s:Align_Range_Right(width) "{{{1
@@ -389,6 +389,7 @@ function! textformat#Align_Command(align, ...) range "{{{1
 		else
 			let l:width = s:default_width
 		endif
+
 		if a:align == 'right'
 			execute a:firstline.','.a:lastline.'call s:Align_Range_Right('.l:width.')'
 		elseif a:align == 'justify'
