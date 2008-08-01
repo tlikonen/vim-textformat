@@ -187,7 +187,7 @@ function! s:Align_String_Justify(string, width) "{{{1
 				let l:more_spaces -= len(l:space_sentence_full)
 				if l:more_spaces == 0 | break | endif
 			else
-				for l:i in s:Distribute_Spaces(l:space_sentence_full,l:more_spaces)
+				for l:i in s:Distributed_Selection(l:space_sentence_full,l:more_spaces)
 					let l:space_list[l:i] +=1
 				endfor
 				break
@@ -201,7 +201,7 @@ function! s:Align_String_Justify(string, width) "{{{1
 				let l:more_spaces -= len(l:space_sentence_semi)
 				if l:more_spaces == 0 | break | endif
 			else
-				for l:i in s:Distribute_Spaces(l:space_sentence_semi,l:more_spaces)
+				for l:i in s:Distributed_Selection(l:space_sentence_semi,l:more_spaces)
 					let l:space_list[l:i] +=1
 				endfor
 				break
@@ -209,7 +209,7 @@ function! s:Align_String_Justify(string, width) "{{{1
 
 			" Finally distribute spaces to other available
 			" positions and exit the loop.
-			for l:i in s:Distribute_Spaces(l:space_other,l:more_spaces)
+			for l:i in s:Distributed_Selection(l:space_other,l:more_spaces)
 				let l:space_list[l:i] +=1
 			endfor
 			break
@@ -248,7 +248,7 @@ function! s:Add_Double_Spacing(string) "{{{1
 	endif
 endfunction
 
-function! s:Distribute_Spaces(list, pick) "{{{1
+function! s:Distributed_Selection(list, pick) "{{{1
 	" 'list' is a list-type variable [ item1, item2, ... ]
 	" 'pick' is a number how many of the list's items we want to choose
 	"
