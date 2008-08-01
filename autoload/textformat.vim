@@ -249,80 +249,96 @@ function! s:Add_Double_Spacing(string) "{{{1
 endfunction
 
 function! s:Distribute_Spaces(list, pick) "{{{1
+	" 'list' is a list-type variable [ item1, item2, ... ]
+	" 'pick' is a number how many of the list's items we want to choose
+	"
+	" This function returns a list which has 'pick' number of items from
+	" the original list. Items are choosed in distributed manner. For
+	" example, if 'pick' is 1 then the algorithm chooses an item near the
+	" center of the 'list'. If 'pick' is 2 then the first one is about 1/3
+	" from the begining and the another one about 2/3 from the begining.
 
+	" l:pick_list is a list of 0's and 1's and its length will be the
+	" same as original list's. Number 1 means that this list item will be
+	" picked and 0 means that the item will be dropped. Finally
+	" l:pick_list could look like this: [0, 1, 0, 1, 0]
+	" (i.e., two items evenly picked from a list of five items)
+	let l:pick_list = []
+
+	" First pick items evenly from the begining of the list. This also
+	" actually constructs the list.
 	let l:div1 = len(a:list) / a:pick
 	let l:mod1 = len(a:list) % a:pick
-
-	let l:space_list = []
 	for l:i in range(len(a:list)-l:mod1)
 		if !eval(l:i%l:div1)
-			let l:space_list += [1]
+			let l:pick_list += [1]
 		else
-			let l:space_list += [0]
+			let l:pick_list += [0]
 		endif
 	endfor
 
 	if l:mod1 > 0
-		let l:div2 = len(l:space_list) / l:mod1
-		let l:mod2 = len(l:space_list) % l:mod1
-		for l:i in range(len(l:space_list)-l:mod2)
+		" The division wasn't even so we get the remaining items and
+		" distribute them evenly again to the list.
+		let l:div2 = len(l:pick_list) / l:mod1
+		let l:mod2 = len(l:pick_list) % l:mod1
+		for l:i in range(len(l:pick_list)-l:mod2)
 			if !eval(l:i%l:div2)
-				call insert(l:space_list,0,l:i)
+				call insert(l:pick_list,0,l:i)
 			endif
 		endfor
 	endif
 
-	"normal ggdG
-	let l:spaces_begin = 0
-	for l:i in l:space_list
+	" There may be very different number of zeros in the begining and end
+	" of the list. We count them.
+	let l:zeros_begin = 0
+	for l:i in l:pick_list
 		if l:i == 0
-			let l:spaces_begin += 1
+			let l:zeros_begin += 1
 		else
 			break
 		endif
 	endfor
-	let l:spaces_end = 0
-	for l:i in reverse(copy(l:space_list))
+	let l:zeros_end = 0
+	for l:i in reverse(copy(l:pick_list))
 		if l:i == 0
-			let l:spaces_end += 1
+			let l:zeros_end += 1
 		else
 			break
 		endif
 	endfor
-	"execute '$s/$/\r'.l:spaces_begin
-	"execute '$s/$/\r'.l:spaces_end
-	"execute '$s/$/\r'.string(l:space_list)
 
-	if l:spaces_end
-		call remove(l:space_list,len(l:space_list)-l:spaces_end,-1)
-		"execute '$s/$/\r'.string(l:space_list)
+	" Then we remove them.
+	if l:zeros_end
+		" Remove 0 items from the end. We need to remove them first
+		" from the end because list items' index number will change
+		" when items are removed from the begining. Then it would make
+		" a bit more difficult to remove ending spaces.
+		call remove(l:pick_list,len(l:pick_list)-l:zeros_end,-1)
 	endif
-	if l:spaces_begin
-		call remove(l:space_list,0,l:spaces_begin-1)
-		"execute '$s/$/\r'.string(l:space_list)
+	if l:zeros_begin
+		" Remove 0 items from the begining.
+		call remove(l:pick_list,0,l:zeros_begin-1)
 	endif
-	let l:spaces_both = l:spaces_begin + l:spaces_end
-	"execute '$s/$/\r'.l:spaces_both
+	let l:zeros_both = l:zeros_begin + l:zeros_end
 
-	for l:i in range(l:spaces_both/2)
-		call insert(l:space_list,0,0)
+	" Put even amount of zeros to begining and end
+	for l:i in range(l:zeros_both/2)
+		call insert(l:pick_list,0,0)
 	endfor
-	"execute '$s/$/\r'.string(l:space_list)
-	for l:i in range((l:spaces_both/2)+(l:spaces_both%2))
-		call add(l:space_list,0)
+	for l:i in range((l:zeros_both/2)+(l:zeros_both%2))
+		call add(l:pick_list,0)
 	endfor
-	"execute '$s/$/\r'.string(l:space_list)
 
-	"return l:space_list
-
+	" Finally construct and return a new list which has only the items we
+	" have chosen.
 	let l:new_list = []
-	for l:i in range(len(l:space_list))
-		if l:space_list[l:i] == 1
+	for l:i in range(len(l:pick_list))
+		if l:pick_list[l:i] == 1
 			let l:new_list += [a:list[l:i]]
 		endif
 	endfor
 	return l:new_list
-
 endfunction
 
 function! textformat#Quick_Align_Left() "{{{1
