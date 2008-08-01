@@ -207,19 +207,12 @@ function! s:Align_String_Justify(string, width) "{{{1
 				break
 			endif
 
-			" Käydään läpi muut
-			if l:more_spaces >= len(l:space_other)
-				for l:i in l:space_other
-					let l:space_list[l:i] += 1
-				endfor
-				let l:more_spaces -= len(l:space_other)
-				if l:more_spaces == 0 | break | endif
-			else
-				for l:i in s:Distribute_Spaces(l:space_other,l:more_spaces)
-					let l:space_list[l:i] +=1
-				endfor
-				break
-			endif
+			" Finally distribute spaces to other available
+			" positions and exit the loop.
+			for l:i in s:Distribute_Spaces(l:space_other,l:more_spaces)
+				let l:space_list[l:i] +=1
+			endfor
+			break
 		endif
 	endwhile
 
