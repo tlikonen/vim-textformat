@@ -284,7 +284,7 @@ function! s:Distributed_Selection(list, pick) "{{{1
 	" the original list. Items are choosed in distributed manner. For
 	" example, if 'pick' is 1 then the algorithm chooses an item near the
 	" center of the 'list'. If 'pick' is 2 then the first one is about 1/3
-	" from the begining and the another one about 2/3 from the begining.
+	" from the beginning and the another one about 2/3 from the beginning.
 
 	" l:pick_list is a list of 0's and 1's and its length will be the
 	" same as original list's. Number 1 means that this list item will be
@@ -293,7 +293,7 @@ function! s:Distributed_Selection(list, pick) "{{{1
 	" (i.e., two items evenly picked from a list of five items)
 	let l:pick_list = []
 
-	" First pick items evenly from the begining of the list. This also
+	" First pick items evenly from the beginning of the list. This also
 	" actually constructs the list.
 	let l:div1 = len(a:list) / a:pick
 	let l:mod1 = len(a:list) % a:pick
@@ -317,7 +317,7 @@ function! s:Distributed_Selection(list, pick) "{{{1
 		endfor
 	endif
 
-	" There may be very different number of zeros in the begining and end
+	" There may be very different number of zeros in the beginning and end
 	" of the list. We count them.
 	let l:zeros_begin = 0
 	for l:i in l:pick_list
@@ -340,17 +340,17 @@ function! s:Distributed_Selection(list, pick) "{{{1
 	if l:zeros_end
 		" Remove 0 items from the end. We need to remove them first
 		" from the end because list items' index number will change
-		" when items are removed from the begining. Then it would make
+		" when items are removed from the beginning. Then it would make
 		" a bit more difficult to remove ending spaces.
 		call remove(l:pick_list,len(l:pick_list)-l:zeros_end,-1)
 	endif
 	if l:zeros_begin
-		" Remove 0 items from the begining.
+		" Remove 0 items from the beginning.
 		call remove(l:pick_list,0,l:zeros_begin-1)
 	endif
 	let l:zeros_both = l:zeros_begin + l:zeros_end
 
-	" Put even amount of zeros to begining and end
+	" Put even amount of zeros to beginning and end
 	for l:i in range(l:zeros_both/2)
 		call insert(l:pick_list,0,0)
 	endfor
