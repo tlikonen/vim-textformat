@@ -444,6 +444,7 @@ endfunction
 function! textformat#Align_Command(align, ...) range "{{{1
 	" For the left align the optional parameter a:1 is [indent]. For
 	" others it's [width].
+	let l:pos = getpos('.')
 	if a:align == 'left'
 		if a:0 && a:1 >= 0
 			execute a:firstline.','.a:lastline.'call s:Align_Range_Left('.a:1.')'
@@ -467,6 +468,7 @@ function! textformat#Align_Command(align, ...) range "{{{1
 			execute a:firstline.','.a:lastline.'call s:Align_Range_Center('.l:width.')'
 		endif
 	endif
+	call setpos('.',l:pos)
 endfunction
 
 " vim600: fdm=marker
