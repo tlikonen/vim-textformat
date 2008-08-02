@@ -54,9 +54,9 @@ function! s:Align_Range_Left(...) range "{{{1
 	let l:line_replace = s:Align_String_Left(getline(a:firstline))
 	call setline(a:firstline,l:start_ws.l:line_replace)
 
-	" If fo+=2 and there are more than one line to align get the indent
+	" If fo=~2 and there are more than one line to align get the indent
 	" of the second line and retab it.
-	if match(&formatoptions,'2') >= 0 && a:lastline > a:firstline
+	if a:0==0 && match(&formatoptions,'2') >= 0 && a:lastline > a:firstline
 		execute a:firstline + 1
 		normal! ^
 		let l:start_ws = s:Retab_Indent(virtcol('.')-1)
