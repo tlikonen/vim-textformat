@@ -41,32 +41,32 @@ function! s:Align_Range_Left(...) range "{{{1
 	if a:0 && a:1 >= 0
 		" If indent is given as the parameter form a retabbed
 		" whitespace string.
-		let l:start_ws = s:Retab_Indent(a:1)
+		let l:leading_ws = s:Retab_Indent(a:1)
 	else
 		" If indent is not given as a parameter get the indent of the
 		" first line.
 		execute a:firstline
 		normal! ^
-		let l:start_ws = s:Retab_Indent(virtcol('.')-1)
+		let l:leading_ws = s:Retab_Indent(virtcol('.')-1)
 	endif
 
 	" Print the first line
 	let l:line_replace = s:Align_String_Left(getline(a:firstline))
-	call setline(a:firstline,l:start_ws.l:line_replace)
+	call setline(a:firstline,l:leading_ws.l:line_replace)
 
 	" If fo=~2 and there are more than one line to align get the indent
 	" of the second line and retab it.
 	if a:0==0 && match(&formatoptions,'2') >= 0 && a:lastline > a:firstline
 		execute a:firstline + 1
 		normal! ^
-		let l:start_ws = s:Retab_Indent(virtcol('.')-1)
+		let l:leading_ws = s:Retab_Indent(virtcol('.')-1)
 	endif
 
 	" Align the rest of the lines
 	for l:i in range(a:lastline-a:firstline)
 		let l:line = a:firstline + 1 + l:i " First line is already printed, hence +1
 		let l:line_replace = s:Align_String_Left(getline(l:line))
-		call setline(l:line,l:start_ws.l:line_replace)
+		call setline(l:line,l:leading_ws.l:line_replace)
 	endfor
 endfunction
 
@@ -77,10 +77,10 @@ function! s:Align_Range_Right(width) "{{{1
 		call setline(line('.'),'')
 	else
 		" Retab beginning whitespaces
-		let l:start_ws = s:Retab_Indent(strlen(substitute(l:line_replace,'\v^( *).*$','\1','')))
+		let l:leading_ws = s:Retab_Indent(strlen(substitute(l:line_replace,'\v^( *).*$','\1','')))
 		" Get the rest of the line
 		let l:line_replace = substitute(l:line_replace,'^ *','','')
-		call setline(line('.'),l:start_ws.l:line_replace)
+		call setline(line('.'),l:leading_ws.l:line_replace)
 	endif
 endfunction
 
@@ -88,18 +88,18 @@ function! s:Align_Range_Justify(width, ...) range "{{{1
 	" Get the indent for the first line.
 	execute a:firstline
 	normal! ^
-	let l:start_ws = s:Retab_Indent(virtcol('.')-1)
+	let l:leading_ws = s:Retab_Indent(virtcol('.')-1)
 	" 'textwidth' minus indent to get the actual text area width
 	let l:width = a:width-(virtcol('.')-1)
-	let l:line_replace = substitute(l:start_ws.s:Align_String_Justify(getline(a:firstline),l:width),'\m\s*$','','')
+	let l:line_replace = substitute(l:leading_ws.s:Align_String_Justify(getline(a:firstline),l:width),'\m\s*$','','')
 	call setline(a:firstline,l:line_replace)
 	" If fo+=2 and range is more than one line get the indent of the
 	" second line.
 	if match(&formatoptions,'2') >= 0 && a:lastline > a:firstline
-		"let l:start_ws = substitute(getline(a:firstline+1),'\m\S.*','','')
+		"let l:leading_ws = substitute(getline(a:firstline+1),'\m\S.*','','')
 		execute a:firstline+1
 		normal! ^
-		let l:start_ws = s:Retab_Indent(virtcol('.')-1)
+		let l:leading_ws = s:Retab_Indent(virtcol('.')-1)
 		let l:width = a:width-(virtcol('.')-1)
 	endif
 	" Justify all the lines in range
@@ -108,10 +108,10 @@ function! s:Align_Range_Justify(width, ...) range "{{{1
 		if l:line == a:lastline && a:0
 			" Align the last line to left if the second optional
 			" parameter was given.
-			call setline(l:line,l:start_ws.s:Truncate_Spaces(getline(l:line)))
+			call setline(l:line,l:leading_ws.s:Truncate_Spaces(getline(l:line)))
 		else
 			" Other lines left-right justified
-			let l:line_replace = substitute(l:start_ws.s:Align_String_Justify(getline(l:line),l:width),'\m\s*$','','')
+			let l:line_replace = substitute(l:leading_ws.s:Align_String_Justify(getline(l:line),l:width),'\m\s*$','','')
 			call setline(l:line,l:line_replace)
 		endif
 	endfor
