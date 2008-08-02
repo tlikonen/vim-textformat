@@ -1,4 +1,4 @@
-*textformat.txt*	Vim Text Formatter  (version 1.0)	    2008-08-02
+*textformat.txt*	Vim Text Formatter  (version 1.0)	    2008-08-03
 
 
 Description	This plugin provides commands and key mappings to quickly
@@ -238,11 +238,11 @@ Happy formatting!
 ==============================================================================
 5. Version history					  *textformat-history*
 
-	v1.0							    2008-08-02
+	v1.0							    2008-08-03
 
-	      - Align commands now follow user's 'expandtab' setting and print
-		leading whitespaces accordingly. Now this works just like
-		:left, :right and :center commands.
+	      - All the commands now follow user's 'expandtab' setting and
+		print leading whitespaces accordingly. Now this works just
+		like :left, :right and :center commands.
 
 	v0.9							    2008-08-01
 
