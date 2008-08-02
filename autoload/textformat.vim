@@ -106,7 +106,8 @@ function! s:Align_Range_Justify(width, ...) range "{{{1
 	for l:i in range(a:lastline-a:firstline)
 		let l:line = a:firstline + 1 + l:i
 		if l:line == a:lastline && a:0
-			" Align the last line to left
+			" Align the last line to left if the second optional
+			" parameter was given.
 			call setline(l:line,l:start_ws.s:Truncate_Spaces(getline(l:line)))
 		else
 			" Other lines left-right justified
