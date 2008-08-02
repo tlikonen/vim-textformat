@@ -145,10 +145,10 @@ Vim's own align commands: |:left|, |:right| and |:center|.
 3. Default key mappings				   *textformat-keymap-default*
 
 By default this plugin provides a couple of key mappings for convenient text
-formatting. If some of the mappings have already been defined by user (or are
-taken by some other plugin) then some of the following mappings may not be
-automatically available. See the next section of this manual for information
-on how to change the default mappings.
+formatting. If the mappings have already been defined by user (or are taken by
+other plugins) then some of the following mappings may not be automatically
+available. See the next section of this manual for information on how to
+change the default mappings.
 
 There are key mappings available for normal mode and visual mode. As usual,
 <Leader> is the backslash key by default but it can be changed with
