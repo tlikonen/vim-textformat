@@ -36,24 +36,35 @@
 let s:default_width = 80
 
 function! s:Align_Range_Left(...) range "{{{1
-	if a:0 > 0 && a:1 >= 0
-		" If [indent] is given align the first line accordingly
-		let l:start_ws = repeat(' ',a:1)
-		let l:line_replace = s:Align_String_Left(getline(a:firstline))
-		call setline(a:firstline,l:start_ws.l:line_replace)
+	" Get the indent for the text area (or only for the first line) and
+	" retab it according to 'expandtab'.
+	if a:0 && a:1 >= 0
+		" If indent is given as the parameter form a retabbed
+		" whitespace string.
+		let l:start_ws = s:Retab_Indent(a:1)
 	else
-		" If [indent] is not given get the indent of the first line
-		" (and possibly the second too in case fo+=2).
-		let l:start_ws = substitute(getline(a:firstline),'\m\S.*','','')
-		let l:line_replace = s:Align_String_Left(getline(a:firstline))
-		call setline(a:firstline,l:start_ws.l:line_replace)
-		if match(&formatoptions,'2') >= 0 && a:lastline > a:firstline
-			let l:start_ws = substitute(getline(a:firstline+1),'\m\S.*','','')
-		endif
+		" If indent is not given as a parameter get the indent of the
+		" first line.
+		execute a:firstline
+		normal! ^
+		let l:start_ws = s:Retab_Indent(virtcol('.')-1)
 	endif
+
+	" Print the first line
+	let l:line_replace = s:Align_String_Left(getline(a:firstline))
+	call setline(a:firstline,l:start_ws.l:line_replace)
+
+	" If fo+=2 and there are more than one line to align get the indent
+	" of the second line and retab it.
+	if match(&formatoptions,'2') >= 0 && a:lastline > a:firstline
+		execute a:firstline + 1
+		normal! ^
+		let l:start_ws = s:Retab_Indent(virtcol('.')-1)
+	endif
+
 	" Align the rest of the lines
 	for l:i in range(a:lastline-a:firstline)
-		let l:line = a:firstline + 1 + l:i
+		let l:line = a:firstline + 1 + l:i " First line is already printed, hence +1
 		let l:line_replace = s:Align_String_Left(getline(l:line))
 		call setline(l:line,l:start_ws.l:line_replace)
 	endfor
@@ -65,25 +76,31 @@ function! s:Align_Range_Right(width) "{{{1
 		" If line would be full of spaces just print empty line.
 		call setline(line('.'),'')
 	else
-		call setline(line('.'),l:line_replace)
+		" Retab beginning whitespaces
+		let l:start_ws = s:Retab_Indent(strlen(substitute(l:line_replace,'\v^( *).*$','\1','')))
+		" Get the rest of the line
+		let l:line_replace = substitute(l:line_replace,'^ *','','')
+		call setline(line('.'),l:start_ws.l:line_replace)
 	endif
 endfunction
 
 function! s:Align_Range_Justify(width, ...) range "{{{1
-	" Get the indent of the first line.
-	let l:start_ws = substitute(getline(a:firstline),'\m\S.*','','')
-	" 'textwidth' minus indent to get the actual text area width
+	" Get the indent for the first line.
+	execute a:firstline
 	normal! ^
-	let l:width = a:width-virtcol('.')+1
+	let l:start_ws = s:Retab_Indent(virtcol('.')-1)
+	" 'textwidth' minus indent to get the actual text area width
+	let l:width = a:width-(virtcol('.')-1)
 	let l:line_replace = substitute(l:start_ws.s:Align_String_Justify(getline(a:firstline),l:width),'\m\s*$','','')
 	call setline(a:firstline,l:line_replace)
 	" If fo+=2 and range is more than one line get the indent of the
 	" second line.
 	if match(&formatoptions,'2') >= 0 && a:lastline > a:firstline
-		let l:start_ws = substitute(getline(a:firstline+1),'\m\S.*','','')
+		"let l:start_ws = substitute(getline(a:firstline+1),'\m\S.*','','')
 		execute a:firstline+1
 		normal! ^
-		let l:width = a:width-virtcol('.')+1
+		let l:start_ws = s:Retab_Indent(virtcol('.')-1)
+		let l:width = a:width-(virtcol('.')-1)
 	endif
 	" Justify all the lines in range
 	for l:i in range(a:lastline-a:firstline)
@@ -369,6 +386,21 @@ function! s:Distributed_Selection(list, pick) "{{{1
 	return l:new_list
 endfunction
 
+function! s:Retab_Indent(column) "{{{1
+	" column = the left indent column starting from 0
+	" Function returns a string of whitespaces, a mixture of tabs and
+	" spaces depending on the 'expandtab' option.
+	if &expandtab
+		" Only spaces
+		return repeat(' ',a:column)
+	else
+		" Tabs and spaces
+		let l:tabs = a:column / &tabstop
+		let l:spaces = a:column % &tabstop
+		return repeat(nr2char(9),l:tabs).repeat(' ',l:spaces)
+	endif
+endfunction
+
 function! textformat#Quick_Align_Left() "{{{1
 	let l:pos = getpos('.')
 	let l:autoindent = &autoindent
@@ -403,16 +435,10 @@ endfunction
 
 function! textformat#Quick_Align_Center() "{{{1
 	let l:width = &textwidth
-	" It's not good idea to use tabs in text area which has very different
-	" number of spaces before the lines. Plain spaces are more reliable so
-	" we set 'expandtab' variable before the operation.
-	let l:expandtab = &expandtab
-	setlocal expandtab
 	if l:width == 0 | let l:width = s:default_width  | endif
 	let l:pos = getpos('.')
 	silent normal! vip:call s:Align_Range_Center(l:width)
 	call setpos('.',l:pos)
-	let &l:expandtab = l:expandtab
 endfunction
 
 function! textformat#Align_Command(align, ...) range "{{{1
@@ -438,14 +464,7 @@ function! textformat#Align_Command(align, ...) range "{{{1
 		elseif a:align == 'justify'
 			execute a:firstline.','.a:lastline.'call s:Align_Range_Justify('.l:width.')'
 		elseif a:align == 'center'
-			" It's not good idea to use tabs in text area which
-			" has very different number of spaces before the
-			" lines. Plain spaces are more reliable so we set
-			" 'expandtab' variable before the operation.
-			let l:expandtab = &expandtab
-			setlocal expandtab
 			execute a:firstline.','.a:lastline.'call s:Align_Range_Center('.l:width.')'
-			let &l:expandtab = l:expandtab
 		endif
 	endif
 endfunction
