@@ -171,7 +171,7 @@ function! s:Align_String_Justify(string, width) "{{{1
 	" Ok, there are more than one word in the string so we get to do some
 	" real work...
 
-	" Make a list which each item represent a space available in the
+	" Make a list of which each item represent a space available in the
 	" string. The value means how many spaces there are. At the moment set
 	" every list item to one: [1, 1, 1, 1, ...]
 	let l:space_list = []
@@ -438,8 +438,8 @@ function! textformat#Quick_Align_Center() "{{{1
 endfunction
 
 function! textformat#Align_Command(align, ...) range "{{{1
-	" For the left align the optional parameter a:1 is [indent]. For
-	" others it's [width].
+	" For left align the optional parameter a:1 is [indent]. For others
+	" it's [width].
 	let l:pos = getpos('.')
 	if a:align == 'left'
 		if a:0 && a:1 >= 0
