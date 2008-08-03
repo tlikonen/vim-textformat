@@ -426,6 +426,16 @@ function! textformat#Visual_Align_Left() range "{{{1
 	call s:Reformat_Range(a:firstline,a:lastline)
 endfunction
 
+function! textformat#Visual_Align_Right() range "{{{1
+	let l:width = &textwidth
+	if l:width == 0
+		let l:width = s:default_width
+	endif
+
+	execute a:firstline.','.a:lastline.'call s:Align_Range_Right('.l:width.')'
+	normal! '>$
+endfunction
+
 function! textformat#Visual_Align_Justify() range "{{{1
 	let l:width = &textwidth
 	if l:width == 0
@@ -443,6 +453,16 @@ function! textformat#Visual_Align_Justify() range "{{{1
 	let l:pos = getpos('.')
 	execute a:firstline.','.l:last.'call s:Align_Range_Justify('.l:width.',1)'
 	call setpos('.',l:pos)
+endfunction
+
+function! textformat#Visual_Align_Center() range "{{{1
+	let l:width = &textwidth
+	if l:width == 0
+		let l:width = s:default_width
+	endif
+
+	execute a:firstline.','.a:lastline.'call s:Align_Range_Center('.l:width.')'
+	normal! '>$
 endfunction
 
 function! textformat#Quick_Align_Left() "{{{1

@@ -45,9 +45,9 @@ nnoremap <silent> <Plug>Quick_Align_Paragraph_Justify :call textformat#Quick_Ali
 nnoremap <silent> <Plug>Quick_Align_Paragraph_Center :call textformat#Quick_Align_Center()<CR>
 
 vnoremap <silent> <Plug>Align_Range_Left :call textformat#Visual_Align_Left()<CR>
-vnoremap <silent> <Plug>Align_Range_Right :call textformat#Align_Command('right')<CR>
+vnoremap <silent> <Plug>Align_Range_Right :call textformat#Visual_Align_Right()<CR>
 vnoremap <silent> <Plug>Align_Range_Justify :call textformat#Visual_Align_Justify()<CR>
-vnoremap <silent> <Plug>Align_Range_Center :call textformat#Align_Command('center')<CR>
+vnoremap <silent> <Plug>Align_Range_Center :call textformat#Visual_Align_Center()<CR>
 
 function! s:Add_Mapping(mode, lhs, rhs)
 	if maparg(a:lhs, a:mode) == '' && !hasmapto(a:rhs, a:mode)
