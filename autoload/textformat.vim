@@ -152,12 +152,12 @@ function! s:Align_String_Justify(string, width) "{{{1
 	if l:string =~ '\v^ *$'
 		return repeat(' ',a:width)
 	endif
-	let l:string_width = s:String_Width(l:string)
-	if l:string_width >= a:width
+	if s:String_Width(s:Add_Double_Spacing(l:string)) >= a:width
 		" The original string is longer than width so we can just
 		" return the string. No need to go further.
-		return l:string
+		return s:Add_Double_Spacing(l:string)
 	endif
+	let l:string_width = s:String_Width(l:string)
 
 	" This many extra spaces we need.
 	let l:more_spaces = a:width-l:string_width
@@ -439,13 +439,15 @@ function! textformat#Visual_Align_Justify() range "{{{1
 endfunction
 
 function! textformat#Quick_Align_Left() "{{{1
-	let l:pos = getpos('.')
+	let l:autoindent = &autoindent
 	let l:formatoptions = &formatoptions
-	setlocal formatoptions-=w
+	setlocal autoindent formatoptions-=w
+	let l:pos = getpos('.')
 	silent normal! vip:call s:Align_Range_Left()
-	silent normal! vip:call s:Reformat_Range()
 	call setpos('.',l:pos)
+	silent normal! gwip
 	let &l:formatoptions = l:formatoptions
+	let &l:autoindent = l:autoindent
 endfunction
 
 function! textformat#Quick_Align_Right() "{{{1
@@ -459,19 +461,18 @@ endfunction
 function! textformat#Quick_Align_Justify() "{{{1
 	let l:width = &textwidth
 	if l:width == 0 | let l:width = s:default_width  | endif
-	let l:pos = getpos('.')
-	" Spaces will be handled later in Align_Range_Justify() so turn
-	" 'joinspaces' off for reformatting.
-	let l:joinspaces = &joinspaces
-	setlocal nojoinspaces
+	let l:autoindent = &autoindent
 	let l:formatoptions = &formatoptions
-	setlocal formatoptions-=w
+	setlocal autoindent formatoptions-=w
+	let l:pos = getpos('.')
 	silent normal! vip:call s:Align_Range_Left()
-	silent normal! vip:call s:Reformat_Range()
-	let &l:joinspaces = l:joinspaces
-	let &l:formatoptions = l:formatoptions
+	call setpos('.',l:pos)
+	silent normal! gwip
+	let l:pos = getpos('.')
 	silent normal! vip:call s:Align_Range_Justify(l:width,1)
 	call setpos('.',l:pos)
+	let &l:formatoptions = l:formatoptions
+	let &l:autoindent = l:autoindent
 endfunction
 
 function! textformat#Quick_Align_Center() "{{{1
