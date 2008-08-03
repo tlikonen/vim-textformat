@@ -420,9 +420,7 @@ function! s:Reformat_Range(...) range "{{{1
 endfunction
 
 function! textformat#Visual_Align_Left() range "{{{1
-	let l:pos = getpos('.')
 	execute a:firstline.','.a:lastline.'call s:Align_Range_Left()'
-	call setpos('.',l:pos)
 	call s:Reformat_Range(a:firstline,a:lastline)
 endfunction
 
@@ -446,9 +444,6 @@ function! textformat#Visual_Align_Justify() range "{{{1
 	execute a:firstline.','.a:lastline.'call s:Align_Range_Left()'
 	call setpos('.',l:pos)
 
-	" Tämä systeemi ei välttämättä toimi kunnolla. Muotoilun jälkeen
-	" nimittäin merkki '> voi olla ylempänä kuin alkuperäinen a:lastline,
-	" ja sen vuoksi molempien reunojen tasaus ei saa kaikkia rivejä.
 	let l:last = s:Reformat_Range(a:firstline,a:lastline)
 	let l:pos = getpos('.')
 	execute a:firstline.','.l:last.'call s:Align_Range_Justify('.l:width.',1)'
