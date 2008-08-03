@@ -103,7 +103,7 @@ function! s:Align_Range_Justify(width, ...) range "{{{1
 		if l:line == a:lastline && a:0
 			" Align the last line to left if the optional second
 			" parameter was given.
-			call setline(l:line,l:leading_ws.s:Truncate_Spaces(getline(l:line)))
+			call setline(l:line,l:leading_ws.s:Align_String_Left(getline(l:line)))
 		else
 			" Other lines left-right justified
 			let l:line_replace = substitute(l:leading_ws.s:Align_String_Justify(getline(l:line),l:width),'\m\s*$','','')

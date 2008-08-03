@@ -244,6 +244,9 @@ Happy formatting!
 		print leading whitespaces accordingly. Now this works just
 		like :left, :right and :center commands.
 
+	      - The left-aligned last line in justified paragraph did not
+		honor 'joinspaces'. Fixed.
+
 	v0.9							    2008-08-01
 
 	      - Initial upload to http://www.vim.org .
