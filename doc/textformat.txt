@@ -1,4 +1,4 @@
-*textformat.txt*	Vim Text Formatter  (version 1.0)	    2008-08-03
+*textformat.txt*	Vim Text Formatter  (version 1.1)	    2008-08-xx
 
 
 Description	This plugin provides commands and key mappings to quickly
@@ -235,12 +235,19 @@ Happy formatting!
 ==============================================================================
 5. Version history					  *textformat-history*
 
+	v1.1							    2008-08-xx
+
+	      - Keep cursor position more precisely when reformatting
+		a paragraph with \al and \aj.
+	      - When 'joinspaces' is set insert two spaces after .?!
+		punctuation even with left-right justify. This is no similar
+		to other commands.
+
 	v1.0							    2008-08-03
 
 	      - All the commands now follow user's 'expandtab' setting and
 		print leading whitespaces accordingly. Now this works just
 		like :left, :right and :center commands.
-
 	      - The left-aligned last line in justified paragraph did not
 		honor 'joinspaces'. Fixed.
 
