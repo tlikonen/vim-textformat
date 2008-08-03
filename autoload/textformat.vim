@@ -80,6 +80,9 @@ function! s:Align_Range_Right(width) "{{{1
 endfunction
 
 function! s:Align_Range_Justify(width, ...) range "{{{1
+	" The optional argument means that the function left-aligns the last line
+	" of the range. (Possibly all the paragraph endings in the future.
+
 	" Get the indent for the first line.
 	execute a:firstline
 	normal! ^
@@ -397,16 +400,52 @@ function! s:Retab_Indent(column) "{{{1
 	endif
 endfunction
 
+function! s:Reformat_Range(...) range "{{{1
+	if a:0 == 2
+		let l:first = a:1
+		let l:last = a:2
+	else
+		let l:first = a:firstline
+		let l:last = a:lastline
+	endif
+	let l:autoindent = &autoindent
+	setlocal autoindent
+	execute l:first
+	normal! 0
+	execute 'normal! V'.l:last.'G$gw'
+	let &l:autoindent = l:autoindent
+	" The formatting may change the last line of the range so we return
+	" it.
+	return line("'>")
+endfunction
+
+function! textformat#Visual_Align_Left() range "{{{1
+	execute a:firstline.','.a:lastline.'call s:Align_Range_Left()'
+	call s:Reformat_Range(a:firstline,a:lastline)
+endfunction
+
+function! textformat#Visual_Align_Justify() range "{{{1
+	let l:width = &textwidth
+	if l:width == 0
+		let l:width = s:default_width
+	endif
+	execute a:firstline.','.a:lastline.'call s:Align_Range_Left()'
+
+	" Tämä systeemi ei välttämättä toimi kunnolla. Muotoilun jälkeen
+	" nimittäin merkki '> voi olla ylempänä kuin alkuperäinen a:lastline,
+	" ja sen vuoksi molempien reunojen tasaus ei saa kaikkia rivejä.
+	let l:last = s:Reformat_Range(a:firstline,a:lastline)
+	execute a:firstline.','.l:last.'call s:Align_Range_Justify('.l:width.',1)'
+endfunction
+
 function! textformat#Quick_Align_Left() "{{{1
 	let l:pos = getpos('.')
-	let l:autoindent = &autoindent
 	let l:formatoptions = &formatoptions
-	setlocal autoindent formatoptions-=w
+	setlocal formatoptions-=w
 	silent normal! vip:call s:Align_Range_Left()
-	silent normal! gwip
+	silent normal! vip:call s:Reformat_Range()
 	call setpos('.',l:pos)
 	let &l:formatoptions = l:formatoptions
-	let &l:autoindent = l:autoindent
 endfunction
 
 function! textformat#Quick_Align_Right() "{{{1
@@ -421,10 +460,16 @@ function! textformat#Quick_Align_Justify() "{{{1
 	let l:width = &textwidth
 	if l:width == 0 | let l:width = s:default_width  | endif
 	let l:pos = getpos('.')
+	" Spaces will be handled later in Align_Range_Justify() so turn
+	" 'joinspaces' off for reformatting.
 	let l:joinspaces = &joinspaces
 	setlocal nojoinspaces
-	call textformat#Quick_Align_Left()
+	let l:formatoptions = &formatoptions
+	setlocal formatoptions-=w
+	silent normal! vip:call s:Align_Range_Left()
+	silent normal! vip:call s:Reformat_Range()
 	let &l:joinspaces = l:joinspaces
+	let &l:formatoptions = l:formatoptions
 	silent normal! vip:call s:Align_Range_Justify(l:width,1)
 	call setpos('.',l:pos)
 endfunction
