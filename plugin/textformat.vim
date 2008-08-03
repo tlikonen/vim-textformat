@@ -32,6 +32,13 @@
 "
 " }}}
 
+if v:version < 700
+	echohl ErrorMsg
+	echomsg 'Error: TextFormat plugin needs Vim version 7.0 or later. Sorry.'
+	echohl None
+	finish
+endif
+
 command! -nargs=? -range AlignLeft <line1>,<line2>call textformat#Align_Command('left',<args>)
 command! -nargs=? -range AlignRight <line1>,<line2>call textformat#Align_Command('right',<args>)
 command! -nargs=? -range AlignJustify <line1>,<line2>call textformat#Align_Command('justify',<args>)
