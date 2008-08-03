@@ -398,13 +398,13 @@ function! s:Retab_Indent(column) "{{{1
 endfunction
 
 function! textformat#Quick_Align_Left() "{{{1
-	let l:pos = getpos('.')
 	let l:autoindent = &autoindent
 	let l:formatoptions = &formatoptions
 	setlocal autoindent formatoptions-=w
+	let l:pos = getpos('.')
 	silent normal! vip:call s:Align_Range_Left()
-	silent normal! gwip
 	call setpos('.',l:pos)
+	silent normal! gwip
 	let &l:formatoptions = l:formatoptions
 	let &l:autoindent = l:autoindent
 endfunction
@@ -420,10 +420,18 @@ endfunction
 function! textformat#Quick_Align_Justify() "{{{1
 	let l:width = &textwidth
 	if l:width == 0 | let l:width = s:default_width  | endif
+	let l:autoindent = &autoindent
+	let l:formatoptions = &formatoptions
+	setlocal autoindent formatoptions-=w
 	let l:pos = getpos('.')
-	call textformat#Quick_Align_Left()
+	silent normal! vip:call s:Align_Range_Left()
+	call setpos('.',l:pos)
+	silent normal! gwip
+	let l:pos = getpos('.')
 	silent normal! vip:call s:Align_Range_Justify(l:width,1)
 	call setpos('.',l:pos)
+	let &l:formatoptions = l:formatoptions
+	let &l:autoindent = l:autoindent
 endfunction
 
 function! textformat#Quick_Align_Center() "{{{1
