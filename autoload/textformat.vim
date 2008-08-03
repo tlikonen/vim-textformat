@@ -149,12 +149,12 @@ function! s:Align_String_Justify(string, width) "{{{1
 	if l:string =~ '\v^ *$'
 		return repeat(' ',a:width)
 	endif
-	let l:string_width = s:String_Width(l:string)
-	if l:string_width >= a:width
+	if s:String_Width(s:Add_Double_Spacing(l:string)) >= a:width
 		" The original string is longer than width so we can just
 		" return the string. No need to go further.
-		return l:string
+		return s:Add_Double_Spacing(l:string)
 	endif
+	let l:string_width = s:String_Width(l:string)
 
 	" This many extra spaces we need.
 	let l:more_spaces = a:width-l:string_width
@@ -421,10 +421,7 @@ function! textformat#Quick_Align_Justify() "{{{1
 	let l:width = &textwidth
 	if l:width == 0 | let l:width = s:default_width  | endif
 	let l:pos = getpos('.')
-	let l:joinspaces = &joinspaces
-	setlocal nojoinspaces
 	call textformat#Quick_Align_Left()
-	let &l:joinspaces = l:joinspaces
 	silent normal! vip:call s:Align_Range_Justify(l:width,1)
 	call setpos('.',l:pos)
 endfunction
