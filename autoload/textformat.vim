@@ -49,9 +49,9 @@ function! s:Align_Range_Left(...) range "{{{1
 	let l:line_replace = s:Align_String_Left(getline(a:firstline))
 	call setline(a:firstline,l:leading_ws.l:line_replace)
 
-	" If fo=~2 and there are more than one line to align get the indent
+	" If &fo=~2 and there are more than one line to align get the indent
 	" of the second line and retab it.
-	if a:0==0 && match(&formatoptions,'2') >= 0 && a:lastline > a:firstline
+	if a:0==0 && &formatoptions =~ '2' && a:lastline > a:firstline
 		execute a:firstline + 1
 		normal! ^
 		let l:leading_ws = s:Retab_Indent(virtcol('.')-1)
@@ -71,7 +71,7 @@ function! s:Align_Range_Right(width) "{{{1
 		" If line would be full of spaces just print empty line.
 		call setline(line('.'),'')
 	else
-		" Retab beginning whitespaces
+		" Retab leading whitespaces
 		let l:leading_ws = s:Retab_Indent(strlen(substitute(l:line_replace,'\v^( *).*$','\1','')))
 		" Get the rest of the line
 		let l:line_replace = substitute(l:line_replace,'^ *','','')
@@ -91,9 +91,9 @@ function! s:Align_Range_Justify(width, ...) range "{{{1
 	let l:width = a:width-(virtcol('.')-1)
 	let l:line_replace = substitute(l:leading_ws.s:Align_String_Justify(getline(a:firstline),l:width),'\m\s*$','','')
 	call setline(a:firstline,l:line_replace)
-	" If fo+=2 and range is more than one line get the indent of the
+	" If &fo=~2 and range is more than one line get the indent of the
 	" second line.
-	if match(&formatoptions,'2') >= 0 && a:lastline > a:firstline
+	if &formatoptions =~ '2' && a:lastline > a:firstline
 		"let l:leading_ws = substitute(getline(a:firstline+1),'\m\S.*','','')
 		execute a:firstline+1
 		normal! ^
@@ -203,9 +203,9 @@ function! s:Align_String_Justify(string, width) "{{{1
 			let l:space_other = []
 			" Now, find those things:
 			for l:i in range(l:string_spaces)
-				if match(l:word_list[l:i],'\m\S[.?!]$') >= 0
+				if l:word_list[l:i] =~ '\m\S[.?!]$'
 					let l:space_sentence_full += [l:i]
-				elseif match(l:word_list[l:i],'\m\S[,:;]$') >= 0
+				elseif l:word_list[l:i] =~ '\m\S[,:;]$'
 					let l:space_sentence_semi += [l:i]
 				else
 					let l:space_other += [l:i]
