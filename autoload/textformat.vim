@@ -294,7 +294,7 @@ function! s:Distributed_Selection(list, pick) "{{{1
 	" 'pick' is a number how many of the list's items we want to choose
 	"
 	" This function returns a list which has 'pick' number of items from
-	" the original list. Items are choosed in distributed manner. For
+	" the original list. Items are chosen in distributed manner. For
 	" example, if 'pick' is 1 then the algorithm chooses an item near the
 	" center of the 'list'. If 'pick' is 2 then the first one is about 1/3
 	" from the beginning and the another one about 2/3 from the beginning.
