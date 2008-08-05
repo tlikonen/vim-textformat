@@ -29,7 +29,7 @@
 
 if v:version < 700
 	echohl ErrorMsg
-	echomsg 'Error: TextFormat plugin needs Vim version 7.0 or later. Sorry.'
+	echomsg 'TextFormat plugin needs Vim version 7.0 or later. Sorry.'
 	echohl None
 	finish
 endif
