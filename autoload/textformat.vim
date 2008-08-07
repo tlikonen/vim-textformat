@@ -28,10 +28,9 @@
 " }}}
 
 "{{{1 The beginning stuff
-if &compatible || exists('g:loaded_textformat_autoload')
+if &compatible
 	finish
 endif
-let g:loaded_textformat_autoload = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
