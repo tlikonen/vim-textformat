@@ -31,7 +31,6 @@
 if &compatible || exists('g:loaded_textformat')
 	finish
 endif
-let g:loaded_textformat = 1
 let s:save_cpo = &cpo
 set cpo&vim
 "}}}1
@@ -83,5 +82,6 @@ call s:Add_Mapping('v', '<Leader>aj', '<Plug>Align_Range_Justify')
 call s:Add_Mapping('v', '<Leader>ac', '<Plug>Align_Range_Center')
 
 delfunction s:Add_Mapping
+let g:loaded_textformat = 1
 let &cpo = s:save_cpo
 " vim600: fdm=marker
