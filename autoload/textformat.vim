@@ -31,38 +31,78 @@
 let s:default_width = 80
 
 function! s:Align_Range_Left(...) range "{{{1
-	" Get the indent for the text area (or only for the first line) and
-	" retab it according to 'expandtab'.
+	" The optional parameter is the left indent. If it is not given we
+	" detect the indent used in the buffer.
 	if a:0 && a:1 >= 0
-		" If indent is given as the parameter form a retabbed
-		" whitespace string.
+		" The parameter was given so we just use that as the left
+		" indent.
 		let l:leading_ws = s:Retab_Indent(a:1)
+		for l:line in range(a:firstline,a:lastline)
+			let l:line_string = getline(l:line)
+			let l:line_replace = s:Align_String_Left(l:line_string)
+			if &formatoptions =~ 'w' && l:line_string =~ '\s$'
+				" Preserve trailing whitespace because fo=~w
+				let l:line_replace .= ' '
+			endif
+			call s:SetLine(l:line,l:leading_ws.l:line_replace)
+		endfor
 	else
-		" If indent is not given as a parameter get the indent of the
-		" first line.
-		execute a:firstline
-		normal! ^
-		let l:leading_ws = s:Retab_Indent(virtcol('.')-1)
+		" The parameter was not given so we detect each paragraphs'
+		" indent.
+		let l:line = a:firstline
+		while l:line <= a:lastline
+			let l:line_string = getline(l:line)
+			if l:line_string =~ '\m^\s*$'
+				" The line is empty or contains only
+				" whitespaces so print empty line and
+				" continue.
+				call setline(l:line,'')
+				let l:line += 1
+				continue
+			endif
+
+			" Paragraph (or the whole line range) begins here so
+			" get the indent of the first line and print the line.
+			let l:leading_ws = s:Retab_Indent(s:Check_Indent(l:line))
+			let l:line_replace = s:Align_String_Left(l:line_string)
+			if &formatoptions =~ 'w' && l:line_string =~ '\s$'
+				let l:line_replace .= ' '
+			endif
+			call setline(l:line,l:leading_ws.l:line_replace)
+			let l:line += 1
+
+			" If fo=~2 get the indent of the second line
+			if &formatoptions =~ '2'
+				let l:leading_ws = s:Retab_Indent(s:Check_Indent(l:line))
+			endif
+
+			" This loop will go through all the lines in the
+			" paragraph (or till the a:lastline) - starting from
+			" the second line.
+			while l:line <= a:lastline && getline(l:line) !~ '\m^\s*$'
+				let l:line_string = getline(l:line)
+				let l:line_replace = s:Align_String_Left(l:line_string)
+				if &formatoptions =~ 'w'
+					if l:line_string =~ '\s$'
+						call setline(l:line,l:leading_ws.l:line_replace.' ')
+						let l:line += 1
+						continue
+					else
+						call setline(l:line,l:leading_ws.l:line_replace)
+						let l:line += 1
+						" fo=~w and paragraph ends
+						" here so we break the loop.
+						" The next line is new first
+						" line.
+						break
+					endif
+				else
+					call setline(l:line,l:leading_ws.l:line_replace)
+					let l:line += 1
+				endif
+			endwhile
+		endwhile
 	endif
-
-	" Print the first line
-	let l:line_replace = s:Align_String_Left(getline(a:firstline))
-	call setline(a:firstline,l:leading_ws.l:line_replace)
-
-	" If &fo=~2 and there are more than one line to align get the indent
-	" of the second line and retab it.
-	if a:0==0 && &formatoptions =~ '2' && a:lastline > a:firstline
-		execute a:firstline + 1
-		normal! ^
-		let l:leading_ws = s:Retab_Indent(virtcol('.')-1)
-	endif
-
-	" Align the rest of the lines
-	for l:i in range(a:lastline-a:firstline)
-		let l:line = a:firstline + 1 + l:i " First line is already printed, hence +1
-		let l:line_replace = s:Align_String_Left(getline(l:line))
-		call setline(l:line,l:leading_ws.l:line_replace)
-	endfor
 endfunction
 
 function! s:Align_Range_Right(width) "{{{1
