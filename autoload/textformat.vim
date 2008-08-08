@@ -265,6 +265,16 @@ function! s:Check_Indent(line) "{{{1
 	return virtcol('.')-1
 endfunction
 
+function! s:SetLine(line, string) "{{{1
+	" Custom setline() function which prints completely empty line if the
+	" string contains just whitespace characters.
+	if a:string =~ '\m^\s*$'
+		call setline(a:line,'')
+	else
+		call setline(a:line,a:string)
+	endif
+endfunction
+
 function! s:Truncate_Spaces(string) "{{{1
 	let l:string = substitute(a:string,'\v\s+',' ','g')
 	let l:string = substitute(l:string,'\m^\s*','','')
