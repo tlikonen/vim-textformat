@@ -122,19 +122,10 @@ function! s:Align_Range_Center(width) "{{{1
 	execute 'center '.a:width
 endfunction
 
-function! s:Align_String_Left(string, ...) "{{{1
+function! s:Align_String_Left(string) "{{{1
 	let l:string_replace = s:Truncate_Spaces(a:string)
 	let l:string_replace = s:Add_Double_Spacing(l:string_replace)
-	if a:0 && a:1
-		" If optional width argument is given (and is non-zero) we pad
-		" the rest of string with spaces. Currently this code path is
-		" never needed.
-		let l:string_width = s:String_Width(l:string_replace)
-		let l:more_spaces = a:1-l:string_width
-		return l:string_replace.repeat(' ',l:more_spaces)
-	else
-		return l:string_replace
-	endif
+	return l:string_replace
 endfunction
 
 function! s:Align_String_Right(string, width) "{{{1
