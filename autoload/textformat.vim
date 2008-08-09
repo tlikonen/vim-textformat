@@ -481,9 +481,7 @@ function! textformat#Visual_Align_Justify() range "{{{1
 		let l:width = s:default_width
 	endif
 
-	let l:pos = getpos('.')
 	execute a:firstline.','.a:lastline.'call s:Align_Range_Left()'
-	call setpos('.',l:pos)
 
 	let l:last = s:Reformat_Range(a:firstline,a:lastline)
 	let l:pos = getpos('.')
