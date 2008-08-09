@@ -511,9 +511,7 @@ endfunction
 
 function! textformat#Visual_Align_Right() range "{{{1
 	let l:width = &textwidth
-	if l:width == 0
-		let l:width = s:default_width
-	endif
+	if l:width == 0 | let l:width = s:default_width | endif
 
 	execute a:firstline.','.a:lastline.'call s:Align_Range_Right('.l:width.')'
 	normal! '>$
@@ -521,9 +519,7 @@ endfunction
 
 function! textformat#Visual_Align_Justify() range "{{{1
 	let l:width = &textwidth
-	if l:width == 0
-		let l:width = s:default_width
-	endif
+	if l:width == 0 | let l:width = s:default_width | endif
 
 	execute a:firstline.','.a:lastline.'call s:Align_Range_Left()'
 
@@ -535,9 +531,7 @@ endfunction
 
 function! textformat#Visual_Align_Center() range "{{{1
 	let l:width = &textwidth
-	if l:width == 0
-		let l:width = s:default_width
-	endif
+	if l:width == 0 | let l:width = s:default_width | endif
 
 	execute a:firstline.','.a:lastline.'call s:Align_Range_Center('.l:width.')'
 	normal! '>$
