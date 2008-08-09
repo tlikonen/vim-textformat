@@ -1,31 +1,10 @@
 " Text formatter plugin for Vim text editor
 "
-" Version:    2.0
-" Maintainer: Teemu Likonen <tlikonen@iki.fi>
-" GetLatestVimScripts: 2324 1 :AutoInstall: textformat.vim
-"
-" {{{ Copyright and license
-"
-" Copyright (C) 2008 Teemu Likonen <tlikonen@iki.fi>
-"
-" This program is free software; you can redistribute it and/or modify
-" it under the terms of the GNU General Public License as published by
-" the Free Software Foundation; either version 2 of the License, or
-" (at your option) any later version.
-"
-" This program is distributed in the hope that it will be useful,
-" but WITHOUT ANY WARRANTY; without even the implied warranty of
-" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-" GNU General Public License for more details.
-"
-" You should have received a copy of the GNU General Public License
-" along with this program; if not, write to the Free Software
-" Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-"
-" The license text:
-" 	http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
-"
-" }}}
+" Version:		2.0
+" Last Change:		2008-08-09
+" Maintainer:		Teemu Likonen <tlikonen@iki.fi>
+" License:		This file is placed in the public domain.
+" GetLatestVimScripts:	2324 1 :AutoInstall: textformat.vim
 
 "{{{1 The beginning stuff
 if &compatible || exists('g:loaded_textformat')
