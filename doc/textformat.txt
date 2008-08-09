@@ -204,14 +204,14 @@ sentence ending with a ".", "?" or "!". The first line in each paragraph
 inside the range defines the indent for the rest of the lines in the 
 paragraph, except if 'formatoptions' contains "2" then it's the second line.
 
-New paragraph always begins after empty line. If 'formatoptions' contains "w" 
-then new paragraph also begins after line which ends with a non-whitespace 
+New paragraph always begins after a blank line. If 'formatoptions' contains 
+"w" then new paragraph also begins after line which ends with a non-whitespace 
 character. That is, with "w" in 'formatoptions' every line which ends with 
 a non-whitespace also ends a paragraph. In left-right justify such line is 
 aligned to left. You need to ensure that there is a trailing whitespace in 
-every consecutive line which belongs to same paragraph. If 'formatoptions' 
-does not contain "w" then all consecutive non-empty lines belong to same 
-paragraph.
+every consecutive line which belongs to same paragraph (the whitespace is 
+preserved after formatting). If 'formatoptions' does not contain "w" then all 
+consecutive non-blank lines belong to same paragraph.
 
 ==============================================================================
 4. User key mappings                                  *textformat-keymap-user*
