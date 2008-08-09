@@ -1,6 +1,6 @@
 " Text formatter plugin for Vim text editor
 "
-" Version:    1.1
+" Version:    2.0
 " Maintainer: Teemu Likonen <tlikonen@iki.fi>
 " GetLatestVimScripts: 2324 1 :AutoInstall: textformat.vim
 "
