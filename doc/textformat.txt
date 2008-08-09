@@ -24,8 +24,8 @@ Contents
 ==============================================================================
 1. Quick start                                              *textformat-start*
 
-The impatient ones are always with us so here is the list of (probably) the 
-most commonly used key mappings for formatting text:
+The impatient ones are always with us so here is a list of the most commonly 
+used key mappings for formatting text:
 
 <Leader>al              Reformat current paragraph (or range of lines) and 
                         align lines to left.
@@ -34,7 +34,7 @@ most commonly used key mappings for formatting text:
                         right.
 
 <Leader>aj              Reformat current paragraph (or range of lines) and 
-                        justify it to both margins. The last line in the 
+                        justify it to both margins. The last line of each 
                         paragraph is aligned to left.
 
 <Leader>ac              Center lines of current paragraph (or line range).
@@ -125,29 +125,27 @@ or something. The "daily tools" are explained later.
 
 Discussion ~
 
-All the previous ex commands operate on single lines only. They do not wrap 
-lines nor do other kind of formatting. If [width] (or 'textwidth') is too 
-narrow for the line then some characters will go beyond the right margin. This 
-is similar to Vim's own |:left|, |:right| and |:center| commands. More 
-sophisticated formatting tools are provided as key mappings. See the next 
-section of this manual.
+All the previous ex commands are rather simple and operate on single lines 
+only. They do not wrap lines nor do other kind of formatting. If [width] (or 
+'textwidth') is too narrow for the line then some characters will go beyond 
+the right margin. This is similar to Vim's own |:left|, |:right| and |:center| 
+commands. More sophisticated formatting tools are provided as key mappings 
+(see below).
 
-Usually when paragraphs are justified the last line of paragraph is aligned to 
-left. However, :AlignJustify command (see above) does not do this. The purpose 
+Usually when paragraphs are justified the last line of the paragraph is 
+aligned to left. However, :AlignJustify command does not do this. The purpose 
 of this command is to do exactly what was asked for: left-right justify 
-a range of lines. The general-purpose justification tools is <Leader>aj which 
+a range of lines. More sophisticated justification tools is <Leader>aj which 
 reformats the paragraph (like |gw|), justifies lines and aligns the last line 
 to left.
 
-Why do these commands truncate whitespaces? Well, this is a text-formatting 
-tool and in plain text paragraphs any extra spaces are considered 
-a "typographical flaw." These formatting commands can be used to fix 
-whitespace errors in plain text. Another reason is that left-right justify 
-commands need to add extra spaces to make lines fill the text area. If you 
-later want to reformat previously justified paragraph and align it to left, 
-for example, it's convenient that the tool automatically handles this and 
-removes extra spaces. If you want to align text without truncating whitespaces 
-use Vim's own align commands: |:left|, |:right| and |:center|.
+All the commands truncate extra whitespaces which makes them work well 
+together. This is particulary because the left-right justify needs to add 
+extra spaces to make lines fill the text area. If you later want to reformat 
+previously justified paragraph and align it to left, for example, it's 
+convenient that the tool automatically handles this and removes extra spaces. 
+If you want to align text without truncating whitespaces use Vim's own align 
+commands: |:left|, |:right| and |:center|.
 
 ==============================================================================
 3. Default key mappings                            *textformat-keymap-default*
@@ -165,30 +163,31 @@ g:mapleader variable. Consult the Vim manual for more information on <Leader>.
 
 Normal mode (current paragraph) ~
 
-<Leader>al              Left-align current paragraph and reformat the 
-                        paragraph so that it fills 'textwidth'.
+<Leader>al              Left-align current paragraph and reformat it according 
+                        to 'textwidth'.
 
-<Leader>ar              Right-align current paragraph. This does not reformat 
-                        lines because with right-aligned text user usually 
-                        wants to decide exactly what goes to what line.
+<Leader>ar              Right-align current paragraph to margin at 
+                        'textwidth'. This does not reformat lines because with 
+                        right-aligned text user usually wants to decide 
+                        exactly what goes to what line.
 
 <Leader>aj              Left-right justify. The paragraph is first reformatted 
-                        to fill 'textwidth' and finally left-right justified. 
-                        The last line is aligned to left.
+                        according to 'textwidth' and then left-right 
+                        justified. The last line is aligned to left.
 
 <Leader>ac              Center lines of current paragraph horizontally between 
                         the first column and 'textwidth'. This does not 
-                        reformat the paragraph. With centered text user 
+                        reformat the paragraph because with centered text user 
                         usually wants to decide exactly what goes to what 
                         line. Reformatting would destroy it.
 
 
 Visual mode (range of lines) ~
 
-{Visual}<Leader>al      Left-align {Visual} lines, truncate whitespaces and 
-                        reformat text so that it fills 'textwidth'.
+{Visual}<Leader>al      Left-align and reformat {Visual} lines so that it 
+                        fills 'textwidth'.
 
-{Visual}<Leader>ar      Right-align {Visual} lines and truncate whitespaces.
+{Visual}<Leader>ar      Right-align {Visual} lines.
 
 {Visual}<Leader>aj      Left-right justify {Visual} lines. First truncate all 
                         extra whitespace characters, then reformat lines so 
@@ -198,19 +197,20 @@ Visual mode (range of lines) ~
 {Visual}<Leader>ac      Center {Visual} lines.
 
 
-Both normal mode and visual mode commands truncate extra whitespace characters 
-but they also honor 'joinspaces'. If it is set then an extra space is added 
-after every sentence ending with a ".", "?" or "!". The first line in each 
-paragraph defines the indent for the rest of the lines in the paragraph, 
-except if 'formatoptions' contains "2" then it's the second line.
+Both normal mode and visual mode commands truncate extra whitespace 
+characters. If 'joinspaces' is set then an extra space is added after every 
+sentence ending with a ".", "?" or "!". The first line in each paragraph 
+inside the range defines the indent for the rest of the lines in the 
+paragraph, except if 'formatoptions' contains "2" then it's the second line.
 
 New paragraph always begins after empty line. If 'formatoptions' contains "w" 
 then new paragraph also begins after line which ends with a non-whitespace 
 character. That is, with "w" in 'formatoptions' every line which ends with 
 a non-whitespace also ends a paragraph. In left-right justify such line is 
 aligned to left. You need to ensure that there is a trailing whitespace in 
-every consecutive line which belong to same paragraph. If 'formatoptions' does 
-not contain "w" then all consecutive non-empty lines belong to same paragraph.
+every consecutive line which belongs to same paragraph. If 'formatoptions' 
+does not contain "w" then all consecutive non-empty lines belong to same 
+paragraph.
 
 ==============================================================================
 4. User key mappings                                  *textformat-keymap-user*
