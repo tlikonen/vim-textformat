@@ -27,13 +27,17 @@ Contents
 The impatient ones are always with us so here is the list of (probably) the 
 most commonly used key mappings for formatting text:
 
-<Leader>al      Reformat current paragraph (or range of lines) and align lines 
-                to left.
-<Leader>ar      Align lines of current paragraph (or line range) to right.
-<Leader>aj      Reformat current paragraph (or range of lines) and justify it 
-                to both margins. The last line in the paragraph is aligned to 
-                left.
-<Leader>ac      Center lines of current paragraph (or line range).
+<Leader>al              Reformat current paragraph (or range of lines) and 
+                        align lines to left.
+
+<Leader>ar              Align lines of current paragraph (or line range) to 
+                        right.
+
+<Leader>aj              Reformat current paragraph (or range of lines) and 
+                        justify it to both margins. The last line in the 
+                        paragraph is aligned to left.
+
+<Leader>ac              Center lines of current paragraph (or line range).
 
 In normal mode the commands operate on current paragraph. In visual mode they 
 operate on the selected lines. By default, <Leader> is the backslash key (\) 
