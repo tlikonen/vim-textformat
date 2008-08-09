@@ -44,7 +44,11 @@ function! s:Align_Range_Left(...) range "{{{1
 				" Preserve trailing whitespace because fo=~w
 				let l:line_replace .= ' '
 			endif
-			call s:SetLine(l:line,l:leading_ws.l:line_replace)
+			if l:line_replace =~ '\m^\s*$'
+				call setline(l:line,'')
+			else
+				call setline(l:line,l:leading_ws.l:line_replace)
+			endif
 		endfor
 	else
 		" The parameter was not given so we detect each paragraphs'
@@ -303,16 +307,6 @@ function! s:Check_Indent(line) "{{{1
 	execute a:line
 	normal! ^
 	return virtcol('.')-1
-endfunction
-
-function! s:SetLine(line, string) "{{{1
-	" Custom setline() function which prints completely empty line if the
-	" string contains just whitespace characters.
-	if a:string =~ '\m^\s*$'
-		call setline(a:line,'')
-	else
-		call setline(a:line,a:string)
-	endif
 endfunction
 
 function! s:Truncate_Spaces(string) "{{{1
