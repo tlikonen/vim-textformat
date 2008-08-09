@@ -111,7 +111,10 @@ endfunction
 
 function! s:Align_Range_Right(width) "{{{1
 	let l:line_replace = s:Align_String_Right(getline('.'),a:width)
-	if l:line_replace =~ '\v^ *$'
+	if &formatoptions =~ 'w' && getline('.') =~ '\s$'
+		let l:line_replace .= ' '
+	endif
+	if l:line_replace =~ '\m^\s*$'
 		" If line would be full of spaces just print empty line.
 		call setline(line('.'),'')
 	else
@@ -202,8 +205,11 @@ endfunction
 function! s:Align_Range_Center(width) "{{{1
 	let l:line_replace = s:Truncate_Spaces(getline('.'))
 	let l:line_replace = s:Add_Double_Spacing(l:line_replace)
+	if &formatoptions =~ 'w' && getline('.') =~ '\s$'
+		let l:line_replace .= ' '
+	endif
 	call setline(line('.'),l:line_replace)
-	execute 'center '.a:width
+	execute '.center '.a:width
 endfunction
 
 function! s:Align_String_Left(string) "{{{1
