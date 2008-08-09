@@ -61,6 +61,12 @@ function! s:Align_Range_Left(...) range "{{{1
 			call setline(l:line,l:leading_ws.l:line_replace)
 			let l:line += 1
 
+			" If fo=~w, does the paragraph end here? If yes,
+			" continue to next round and find a new first line.
+			if &formatoptions =~ 'w' && l:line_string =~ '\S$'
+				continue
+			endif
+
 			" If fo=~2 get the indent of the second line
 			if &formatoptions =~ '2'
 				let l:leading_ws = s:Retab_Indent(s:Check_Indent(l:line))
@@ -148,6 +154,12 @@ function! s:Align_Range_Justify(width, ...) range "{{{1
 		endif
 		call setline(l:line,l:leading_ws.l:line_replace)
 		let l:line += 1
+
+		" If fo=~w, does the paragraph end here? If yes,
+		" continue to next round and find a new first line.
+		if &formatoptions =~ 'w' && l:line_string =~ '\S$'
+			continue
+		endif
 
 		" If fo=~2 get the indent of the second line
 		if &formatoptions =~ '2'
