@@ -27,17 +27,17 @@ Contents
 The impatient ones are always with us so here is a list of the most commonly 
 used key mappings for formatting text:
 
-<Leader>al              Reformat current paragraph (or range of lines) and 
+<Leader>al              Reformat the current paragraph (or range of lines) and 
                         align lines to left.
 
-<Leader>ar              Align lines of current paragraph (or line range) to 
-                        right.
+<Leader>ar              Align lines of the current paragraph (or line range) 
+                        to right.
 
-<Leader>aj              Reformat current paragraph (or range of lines) and 
+<Leader>aj              Reformat the current paragraph (or range of lines) and 
                         justify it to both margins. The last line of each 
                         paragraph is aligned to left.
 
-<Leader>ac              Center lines of current paragraph (or line range).
+<Leader>ac              Center lines of the current paragraph (or line range).
 
 In normal mode the commands operate on current paragraph. In visual mode they 
 operate on the selected lines. By default, <Leader> is the backslash key (\) 
@@ -163,22 +163,23 @@ g:mapleader variable. Consult the Vim manual for more information on <Leader>.
 
 Normal mode (current paragraph) ~
 
-<Leader>al              Left-align current paragraph and reformat it according 
-                        to 'textwidth'.
+<Leader>al              Left-align the current "inner paragraph" (see |ip|) 
+                        and reformat it according to 'textwidth'.
 
-<Leader>ar              Right-align current paragraph to margin at 
-                        'textwidth'. This does not reformat lines because with 
-                        right-aligned text user usually wants to decide 
-                        exactly what goes to what line.
+<Leader>ar              Right-align the current "inner paragraph" (see |ip|) 
+                        to margin at 'textwidth'. This does not reformat lines 
+                        because with right-aligned text user usually wants to 
+                        decide exactly what goes to what line.
 
-<Leader>aj              Left-right justify. The paragraph is first reformatted 
-                        according to 'textwidth' and then left-right 
-                        justified. The last line is aligned to left.
+<Leader>aj              Left-right justify the current "inner paragraph" (see 
+                        |ip|). The paragraph is first reformatted according to 
+                        'textwidth' and then left-right justified. The last 
+                        line is aligned to left.
 
-<Leader>ac              Center lines of current paragraph horizontally between 
-                        the first column and 'textwidth'. This does not 
-                        reformat the paragraph because with centered text user 
-                        usually wants to decide exactly what goes to what 
+<Leader>ac              Center lines of current "inner paragraph" (see |ip|) 
+                        between the first column and 'textwidth'. This does 
+                        not reformat the paragraph because with centered text 
+                        user usually wants to decide exactly what goes to what 
                         line. Reformatting would destroy it.
 
 
