@@ -230,7 +230,11 @@ Don't use |:nnoremap| and |:vnoremap| commands here; they don't work because
 the right-hand side (<Plug>...) must be remappable. See Vim's manual for more
 information about mapping commands.
 
-Happy formatting!
+Most part of this plugin is loaded to memory only when the text-formatting
+commands or key maps are used for the first time. If you want to completely
+avoid loading this plugin put the following line in your .vimrc file: >
+
+	let g:loaded_textformat = 1
 
 ==============================================================================
 5. Version history					  *textformat-history*

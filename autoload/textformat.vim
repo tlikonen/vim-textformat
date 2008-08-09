@@ -27,6 +27,13 @@
 "
 " }}}
 
+"{{{1 The beginning stuff
+if &compatible
+	finish
+endif
+let s:save_cpo = &cpo
+set cpo&vim
+
 " Constant variables(s) {{{1
 let s:default_width = 80
 
@@ -615,5 +622,8 @@ function! textformat#Align_Command(align, ...) range "{{{1
 	endif
 	call setpos('.',l:pos)
 endfunction
+
+"{{{1 The ending stuff
+let &cpo = s:save_cpo
 
 " vim600: fdm=marker

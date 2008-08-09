@@ -27,6 +27,14 @@
 "
 " }}}
 
+"{{{1 The beginning stuff
+if &compatible || exists('g:loaded_textformat')
+	finish
+endif
+let s:save_cpo = &cpo
+set cpo&vim
+"}}}1
+
 if v:version < 700
 	echohl ErrorMsg
 	echomsg 'TextFormat plugin needs Vim version 7.0 or later. Sorry.'
@@ -34,10 +42,18 @@ if v:version < 700
 	finish
 endif
 
-command! -nargs=? -range AlignLeft <line1>,<line2>call textformat#Align_Command('left',<args>)
-command! -nargs=? -range AlignRight <line1>,<line2>call textformat#Align_Command('right',<args>)
-command! -nargs=? -range AlignJustify <line1>,<line2>call textformat#Align_Command('justify',<args>)
-command! -nargs=? -range AlignCenter <line1>,<line2>call textformat#Align_Command('center',<args>)
+if !exists(':AlignLeft')
+	command -nargs=? -range AlignLeft <line1>,<line2>call textformat#Align_Command('left',<args>)
+endif
+if !exists(':AlignRight')
+	command -nargs=? -range AlignRight <line1>,<line2>call textformat#Align_Command('right',<args>)
+endif
+if !exists(':AlignJustify')
+	command -nargs=? -range AlignJustify <line1>,<line2>call textformat#Align_Command('justify',<args>)
+endif
+if !exists(':AlignCenter')
+	command -nargs=? -range AlignCenter <line1>,<line2>call textformat#Align_Command('center',<args>)
+endif
 
 nnoremap <silent> <Plug>Quick_Align_Paragraph_Left :call textformat#Quick_Align_Left()<CR>
 nnoremap <silent> <Plug>Quick_Align_Paragraph_Right :call textformat#Quick_Align_Right()<CR>
@@ -66,5 +82,6 @@ call s:Add_Mapping('v', '<Leader>aj', '<Plug>Align_Range_Justify')
 call s:Add_Mapping('v', '<Leader>ac', '<Plug>Align_Range_Center')
 
 delfunction s:Add_Mapping
-
+let g:loaded_textformat = 1
+let &cpo = s:save_cpo
 " vim600: fdm=marker
