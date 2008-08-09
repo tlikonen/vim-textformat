@@ -501,13 +501,11 @@ endfunction
 
 function! textformat#Quick_Align_Left() "{{{1
 	let l:autoindent = &autoindent
-	let l:formatoptions = &formatoptions
-	setlocal autoindent formatoptions-=w
+	setlocal autoindent
 	let l:pos = getpos('.')
 	silent normal! vip:call s:Align_Range_Left()
 	call setpos('.',l:pos)
 	silent normal! gwip
-	let &l:formatoptions = l:formatoptions
 	let &l:autoindent = l:autoindent
 endfunction
 
@@ -523,8 +521,7 @@ function! textformat#Quick_Align_Justify() "{{{1
 	let l:width = &textwidth
 	if l:width == 0 | let l:width = s:default_width  | endif
 	let l:autoindent = &autoindent
-	let l:formatoptions = &formatoptions
-	setlocal autoindent formatoptions-=w
+	setlocal autoindent
 	let l:pos = getpos('.')
 	silent normal! vip:call s:Align_Range_Left()
 	call setpos('.',l:pos)
@@ -532,7 +529,6 @@ function! textformat#Quick_Align_Justify() "{{{1
 	let l:pos = getpos('.')
 	silent normal! vip:call s:Align_Range_Justify(l:width,1)
 	call setpos('.',l:pos)
-	let &l:formatoptions = l:formatoptions
 	let &l:autoindent = l:autoindent
 endfunction
 
