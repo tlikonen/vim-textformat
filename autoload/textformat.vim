@@ -26,7 +26,7 @@ function! s:Align_Range_Left(...) range "{{{1
 		for l:line in range(a:firstline,a:lastline)
 			let l:line_string = getline(l:line)
 			let l:line_replace = s:Align_String_Left(l:line_string)
-			if &formatoptions =~ 'w' && l:line_string =~ '\s$'
+			if &formatoptions =~ 'w' && l:line_string =~ '\m\s$'
 				" Preserve trailing whitespace because fo=~w
 				let l:line_replace .= ' '
 			endif
@@ -55,7 +55,7 @@ function! s:Align_Range_Left(...) range "{{{1
 			" get the indent of the first line and print the line.
 			let l:leading_ws = s:Retab_Indent(s:Check_Indent(l:line))
 			let l:line_replace = s:Align_String_Left(l:line_string)
-			if &formatoptions =~ 'w' && l:line_string =~ '\s$'
+			if &formatoptions =~ 'w' && l:line_string =~ '\m\s$'
 				let l:line_replace .= ' '
 			endif
 			call setline(l:line,l:leading_ws.l:line_replace)
@@ -63,7 +63,7 @@ function! s:Align_Range_Left(...) range "{{{1
 
 			" If fo=~w, does the paragraph end here? If yes,
 			" continue to next round and find a new first line.
-			if &formatoptions =~ 'w' && l:line_string =~ '\S$'
+			if &formatoptions =~ 'w' && l:line_string =~ '\m\S$'
 				continue
 			endif
 
@@ -79,7 +79,7 @@ function! s:Align_Range_Left(...) range "{{{1
 				let l:line_string = getline(l:line)
 				let l:line_replace = s:Align_String_Left(l:line_string)
 				if &formatoptions =~ 'w'
-					if l:line_string =~ '\s$'
+					if l:line_string =~ '\m\s$'
 						call setline(l:line,l:leading_ws.l:line_replace.' ')
 						let l:line += 1
 						continue
@@ -103,7 +103,7 @@ endfunction
 
 function! s:Align_Range_Right(width) "{{{1
 	let l:line_replace = s:Align_String_Right(getline('.'),a:width)
-	if &formatoptions =~ 'w' && getline('.') =~ '\s$'
+	if &formatoptions =~ 'w' && getline('.') =~ '\m\s$'
 		let l:line_replace .= ' '
 	endif
 	if l:line_replace =~ '\m^\s*$'
@@ -149,7 +149,7 @@ function! s:Align_Range_Justify(width, ...) range "{{{1
 		else
 			let l:line_replace = s:Align_String_Justify(l:line_string,l:width)
 		endif
-		if &formatoptions =~ 'w' && l:line_string =~ '\s$'
+		if &formatoptions =~ 'w' && l:line_string =~ '\m\s$'
 			let l:line_replace .= ' '
 		endif
 		call setline(l:line,l:leading_ws.l:line_replace)
@@ -157,7 +157,7 @@ function! s:Align_Range_Justify(width, ...) range "{{{1
 
 		" If fo=~w, does the paragraph end here? If yes,
 		" continue to next round and find a new first line.
-		if &formatoptions =~ 'w' && l:line_string =~ '\S$'
+		if &formatoptions =~ 'w' && l:line_string =~ '\m\S$'
 			continue
 		endif
 
@@ -179,7 +179,7 @@ function! s:Align_Range_Justify(width, ...) range "{{{1
 				let l:line_replace = s:Align_String_Justify(l:line_string,l:width)
 			endif
 			if &formatoptions =~ 'w'
-				if l:line_string =~ '\s$'
+				if l:line_string =~ '\m\s$'
 					call setline(l:line,l:leading_ws.l:line_replace.' ')
 					let l:line += 1
 					continue
@@ -203,7 +203,7 @@ endfunction
 function! s:Align_Range_Center(width) "{{{1
 	let l:line_replace = s:Truncate_Spaces(getline('.'))
 	let l:line_replace = s:Add_Double_Spacing(l:line_replace)
-	if &formatoptions =~ 'w' && getline('.') =~ '\s$'
+	if &formatoptions =~ 'w' && getline('.') =~ '\m\s$'
 		let l:line_replace .= ' '
 	endif
 	call setline(line('.'),l:line_replace)
@@ -228,7 +228,7 @@ function! s:Align_String_Justify(string, width) "{{{1
 	let l:string = s:Truncate_Spaces(a:string)
 	" If the parameter string is empty we can just return a line full of
 	" spaces. No need to go further.
-	if l:string =~ '\v^ *$'
+	if l:string =~ '\m^ *$'
 		return repeat(' ',a:width)
 	endif
 	if s:String_Width(s:Add_Double_Spacing(l:string)) >= a:width
