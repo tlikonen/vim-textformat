@@ -126,7 +126,11 @@ endfunction
 function! s:Align_Range_Justify(width, ...) range "{{{1
 	" If the optional second argument is given (and is non-zero) each
 	" paragraphs' last line and range's last line is left-aligned.
-	if a:0 && a:1 | let l:paragraph = 1 | endif
+	if a:0 && a:1
+		let l:paragraph = 1
+	else
+		let l:paragraph = 0
+	endif
 	let l:line = a:firstline
 	while l:line <= a:lastline
 		let l:line_string = getline(l:line)
