@@ -24,19 +24,19 @@ Contents
 ==============================================================================
 1. Quick start                                              *textformat-start*
 
-The impatient ones are always with us so here is a list of the most commonly 
-used key mappings for formatting text:
+The impatient are always with us so below is a short info on (probably) the 
+most important tools provided by this plugin. See the following sections of 
+this manual for more detailed instructions.
 
 <Leader>al              Left-align and reformat
 <Leader>ar              Right-align
 <Leader>aj              Left-right justify and reformat
 <Leader>ac              Center lines
 
-In normal mode the commands operate on current paragraph. In visual mode they 
-operate on the selected lines. By default, <Leader> is the backslash key (\) 
-so by default the mappings are actually \al, \ar, \aj and \ac. If you have 
-changed the g:mapleader variable in your .vimrc file <Leader> may be something 
-else.
+In normal mode the commands operate on current paragraph; in visual mode they 
+operate on the selected lines. By default, <Leader> is the backslash key so by 
+default the mappings are actually \al, \ar, \aj and \ac. If you have changed 
+the g:mapleader variable in your .vimrc file <Leader> may be something else.
 
 ==============================================================================
 2. Commands                                              *textformat-commands*
@@ -58,10 +58,11 @@ or something. The "daily tools" are explained later.
                         that is used as the left margin. If [indent] is not 
                         given the indent of the first line in the [range] (and 
                         the first line of each paragraph within the [range]) 
-                        is used to define indent for the rest of the lines. 
-                        There is one exception: if 'formatoptions' contains 
-                        "2" then the second line defines the indent for the 
-                        rest of the lines.
+                        is used to define indent for the rest of the lines in  
+                        the paragraph. There is one exception: if 
+                        'formatoptions' contains "2" then the second line 
+                        defines the indent for the rest of the lines in the 
+                        paragraph.
 
                         Note: This is very similar to |:left| command except 
                         that this also truncates whitespaces and that without 
@@ -81,8 +82,8 @@ or something. The "daily tools" are explained later.
                         current line) and truncate all extra whitespace 
                         characters (honor 'joinspaces', as in :AlignLeft). 
                         [width] is used as the right margin. If [width] is not 
-                        given 'textwidth' option is used instead. If 
-                        'textwidth' is zero then the value of 80 is used.
+                        given the value of 'textwidth' option is used instead. 
+                        If 'textwidth' is zero then the value of 80 is used.
 
                         Note: This is very similar to |:right| command except 
                         that this also truncates whitespaces.
@@ -92,25 +93,27 @@ or something. The "daily tools" are explained later.
                         current line). This means adjusting spaces between 
                         words so that the lines fit. If 'joinspaces' is set 
                         then at least two spaces are printed after every 
-                        sentence ending with ".", "?" or "!". The first line 
-                        in [range] (and the first line in each paragraph) 
-                        defines the indent for the rest of the lines, except 
-                        if 'formatoptions' contains "2" then it's the second 
-                        line.
+                        sentence ending with a ".", "?" or "!". The first line 
+                        in [range] (and the first line in each paragraph 
+                        within the [range]) defines the indent for the rest of 
+                        the lines in the paragraph, except if 'formatoptions' 
+                        contains "2" then it's the second line.
 
                         Numeric argument [width] is used as the right margin. 
-                        If [width] is not given 'textwidth' is used instead. 
-                        If 'textwidth' is zero then the value of 80 is used.
+                        If [width] is not given the value of 'textwidth' is 
+                        used instead. If 'textwidth' is zero then the value of 
+                        80 is used.
 
                         Also see the Discussion below.
 
 :[range]AlignCenter [width]                                     *:AlignCenter*
                         Center lines in [range] (default is current line) 
-                        horizontally between the first column and [width]. All 
-                        extra whitespace characters are truncated but honor 
+                        between the first column and [width]. All extra 
+                        whitespace characters are truncated but honor 
                         'joinspaces', just like in :AlignLeft. If [width] is 
-                        not given 'textwidth' option is used instead. If 
-                        'textwidth' is zero the value of 80 is used.
+                        not given the value of 'textwidth' option is used 
+                        instead. If 'textwidth' is zero the value of 80 is 
+                        used.
 
                         Note: This is very similar to |:center| except that 
                         this also truncates whitespaces.
@@ -118,30 +121,33 @@ or something. The "daily tools" are explained later.
 
 Discussion ~
 
-All the previous ex commands are rather simple and operate on single lines 
+All the previous ex commands are rather "stupid" and operate on single lines 
 only. They do not wrap lines nor do other kind of formatting. If [width] (or 
 'textwidth') is too narrow for the line then some characters will go beyond 
 the right margin. This is similar to Vim's own |:left|, |:right| and |:center| 
 commands. More sophisticated formatting tools are provided as key mappings 
 (see below).
 
-Usually when paragraphs are justified the last line of the paragraph is 
+Usually when paragraphs are justified the last line of each paragraph is 
 aligned to left. However, :AlignJustify command does not do this. The purpose 
 of this command is to do exactly what was asked for: left-right justify 
-a range of lines. More sophisticated justification tools is <Leader>aj which 
-reformats the paragraph (like |gw|), justifies lines and aligns the last line 
-to left.
+a range of lines. More sophisticated justify tools is <Leader>aj which 
+reformats the paragraph (like |gw|), justifies lines and aligns each 
+paragraph's last line to left.
 
 All the commands truncate extra whitespaces which makes them work well 
-together. This is particulary because the left-right justify needs to add 
+together. This is particularly because the left-right justify needs to add 
 extra spaces to make lines fill the text area. If you later want to reformat 
-previously justified paragraph and align it to left, for example, it's 
+such previously justified paragraph and align it to left, for example, it's 
 convenient that the tool automatically handles this and removes extra spaces. 
 If you want to align text without truncating whitespaces use Vim's own align 
 commands: |:left|, |:right| and |:center|.
 
 ==============================================================================
 3. Default key mappings                            *textformat-keymap-default*
+
+This is the cool stuff as these commands have more magic in them than the ex 
+commands described above.
 
 By default this plugin provides a couple of key mappings for convenient text 
 formatting. If the mappings have already been defined by user (or are taken by 
@@ -173,13 +179,13 @@ Normal mode (current paragraph) ~
                         between the first column and 'textwidth'. This does 
                         not reformat the paragraph because with centered text 
                         user usually wants to decide exactly what goes to what 
-                        line. Reformatting would destroy it.
+                        line. Reformatting would make it difficult.
 
 
 Visual mode (range of lines) ~
 
-{Visual}<Leader>al      Left-align and reformat {Visual} lines so that it 
-                        fills 'textwidth'.
+{Visual}<Leader>al      Left-align and reformat {Visual} lines so that they 
+                        fill 'textwidth'.
 
 {Visual}<Leader>ar      Right-align {Visual} lines.
 
@@ -228,18 +234,21 @@ Here's an example of lines you could put in your .vimrc file: >
 
 That is, |:nmap| command defines mappings for normal mode and |:vmap| for 
 visual mode. Function keys from <F5> to <F8> are used in this example. The 
-rest of the line is a code word for this plugin; they tell Vim what to do. 
-I think the code words are pretty much self-descriptive.
+rest of the line is a code word for Vim and this plugin. They must be written 
+exactly as shown in the example. I think the code words are pretty much 
+self-descriptive.
 
 Don't use |:nnoremap| and |:vnoremap| commands here; they don't work because 
 the right-hand side (<Plug>...) must be remappable. See Vim's manual for more 
-information about mapping commands.
+information about the key map commands.
 
-Most part of this plugin is loaded into memory only when the text-formatting 
+Most part of this plugin is loaded into memory when the text-formatting 
 commands or key maps are used for the first time. If you want to completely 
 avoid loading this plugin put the following line in your .vimrc file: >
 
         let g:loaded_textformat = 1
+
+Happy formatting!
 
 ==============================================================================
 5. Version history                                        *textformat-history*
@@ -249,8 +258,9 @@ avoid loading this plugin put the following line in your .vimrc file: >
               - \al and \aj now reformat text also in visual mode.
               - \al and \aj honor "w" in 'formatoptions' and detect paragraph 
                 boundaries accordingly.
-              - \al and \aj recognize several paragraphs within the range and 
-                detect indent for each paragraph.
+              - :AlignLeft, :AlignJustify, \al and \aj recognize several 
+                paragraphs within the range and detect indent for each 
+                paragraph separately.
               - Add logic to load the plugin script only once.
 
         v1.1                                                        2008-08-04
