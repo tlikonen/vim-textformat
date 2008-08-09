@@ -259,23 +259,5 @@ avoid loading this plugin put the following line in your .vimrc file: >
 
 	      - Initial upload to http://www.vim.org .
 
-Possible future improvements ~
-
-      - Visual mode \al and \aj could reformat lines with |gw|. It's probably
-	what user expects anyway.
-
-      - Visual mode \aj could detect if there are paragraph endings within the
-	visual area and left-align such paragraphs' last line as well as the
-	visual area's last line. This way it would be similar to what Emacs's
-	C-u M-q does with a region which contains several paragraphs. Again,
-	this is probably the most expected behaviour. The ex command, in turn,
-	would work just line-by-line and not try to do smart things. Simple
-	commands are good building blocks for users' own scripts and mappings.
-
-      - Make left align (maybe justify too) act differently when
-	'formatoptions' has "w". Then trailing whitespace(s) would mean that
-	the paragraph continues to the next line. Also, trailing space should
-	not be stripped when fo+=w (i.e., make it similar to |gw|).
-
 ==============================================================================
 vim: ft=help tw=78 ts=8 norl
