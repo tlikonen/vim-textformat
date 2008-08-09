@@ -124,39 +124,75 @@ function! s:Align_Range_Right(width) "{{{1
 endfunction
 
 function! s:Align_Range_Justify(width, ...) range "{{{1
-	" The optional argument means that the function left-aligns the last line
-	" of the range. (Possibly all the paragraph endings in the future.
-
-	" Get the indent for the first line.
-	execute a:firstline
-	normal! ^
-	let l:leading_ws = s:Retab_Indent(virtcol('.')-1)
-	" 'textwidth' minus indent to get the actual text area width
-	let l:width = a:width-(virtcol('.')-1)
-	let l:line_replace = substitute(l:leading_ws.s:Align_String_Justify(getline(a:firstline),l:width),'\m\s*$','','')
-	call setline(a:firstline,l:line_replace)
-	" If &fo=~2 and range is more than one line get the indent of the
-	" second line.
-	if &formatoptions =~ '2' && a:lastline > a:firstline
-		"let l:leading_ws = substitute(getline(a:firstline+1),'\m\S.*','','')
-		execute a:firstline+1
-		normal! ^
-		let l:leading_ws = s:Retab_Indent(virtcol('.')-1)
-		let l:width = a:width-(virtcol('.')-1)
-	endif
-	" Justify all the lines in range
-	for l:i in range(a:lastline-a:firstline)
-		let l:line = a:firstline + 1 + l:i
-		if l:line == a:lastline && a:0
-			" Align the last line to left if the optional second
-			" parameter was given.
-			call setline(l:line,l:leading_ws.s:Align_String_Left(getline(l:line)))
-		else
-			" Other lines left-right justified
-			let l:line_replace = substitute(l:leading_ws.s:Align_String_Justify(getline(l:line),l:width),'\m\s*$','','')
-			call setline(l:line,l:line_replace)
+	" If the optional second argument is given (and is non-zero) each
+	" paragraphs' last line and range's last line is left-aligned.
+	if a:0 && a:1 | let l:paragraph = 1 | endif
+	let l:line = a:firstline
+	while l:line <= a:lastline
+		let l:line_string = getline(l:line)
+		if l:line_string =~ '\m^\s*$'
+			" The line is empty or contains only
+			" whitespaces so print empty line and
+			" continue.
+			call setline(l:line,'')
+			let l:line += 1
+			continue
 		endif
-	endfor
+
+		" Paragraph (or the whole line range) begins here so
+		" get the indent of the first line and print the line.
+		let l:indent = s:Check_Indent(l:line)
+		let l:width = a:width - l:indent
+		let l:leading_ws = s:Retab_Indent(l:indent)
+
+		if l:paragraph && (l:line == a:lastline || getline(l:line+1) =~ '\m^\s*$' || (&formatoptions =~ 'w' && l:line_string =~ '\m\S$'))
+			let l:line_replace = s:Align_String_Left(l:line_string)
+		else
+			let l:line_replace = s:Align_String_Justify(l:line_string,l:width)
+		endif
+		if &formatoptions =~ 'w' && l:line_string =~ '\s$'
+			let l:line_replace .= ' '
+		endif
+		call setline(l:line,l:leading_ws.l:line_replace)
+		let l:line += 1
+
+		" If fo=~2 get the indent of the second line
+		if &formatoptions =~ '2'
+			let l:indent = s:Check_Indent(l:line)
+			let l:width = a:width - l:indent
+			let l:leading_ws = s:Retab_Indent(l:indent)
+		endif
+
+		" This loop will go through all the lines in the
+		" paragraph (or till the a:lastline) - starting from
+		" paragraph's second line.
+		while l:line <= a:lastline && getline(l:line) !~ '\m^\s*$'
+			let l:line_string = getline(l:line)
+			if l:paragraph && (l:line == a:lastline || getline(l:line+1) =~ '\m^\s*$' || (&formatoptions =~ 'w' && l:line_string =~ '\m\S$'))
+				let l:line_replace = s:Align_String_Left(l:line_string)
+			else
+				let l:line_replace = s:Align_String_Justify(l:line_string,l:width)
+			endif
+			if &formatoptions =~ 'w'
+				if l:line_string =~ '\s$'
+					call setline(l:line,l:leading_ws.l:line_replace.' ')
+					let l:line += 1
+					continue
+				else
+					call setline(l:line,l:leading_ws.l:line_replace)
+					let l:line += 1
+					" fo=~w and paragraph ends
+					" here so we break the loop.
+					" The next line is new first
+					" line.
+					break
+				endif
+			else
+				call setline(l:line,l:leading_ws.l:line_replace)
+				let l:line += 1
+			endif
+		endwhile
+	endwhile
 endfunction
 
 function! s:Align_Range_Center(width) "{{{1
