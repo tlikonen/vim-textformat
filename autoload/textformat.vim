@@ -347,12 +347,6 @@ function! s:Align_String_Justify(string, width) "{{{1
 	return l:string.l:word_list[-1]
 endfunction
 
-function! s:Check_Indent(line) "{{{1
-	execute a:line
-	normal! ^
-	return virtcol('.')-1
-endfunction
-
 function! s:Truncate_Spaces(string) "{{{1
 	let l:string = substitute(a:string,'\v\s+',' ','g')
 	let l:string = substitute(l:string,'\m^\s*','','')
@@ -468,6 +462,12 @@ function! s:Distributed_Selection(list, pick) "{{{1
 		endif
 	endfor
 	return l:new_list
+endfunction
+
+function! s:Check_Indent(line) "{{{1
+	execute a:line
+	normal! ^
+	return virtcol('.')-1
 endfunction
 
 function! s:Retab_Indent(column) "{{{1
