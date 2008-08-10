@@ -120,7 +120,7 @@ endfunction
 
 function! s:Align_Range_Justify(width, ...) range "{{{1
 	" If the optional second argument is given (and is non-zero) each
-	" paragraphs' last line and range's last line is left-aligned.
+	" paragraph's last line and range's last line is left-aligned.
 	if a:0 && a:1
 		let l:paragraph = 1
 	else
