@@ -66,7 +66,7 @@ or something. The "daily tools" are explained later.
 
                         Note: This is very similar to |:left| command except 
                         that this also truncates whitespaces and that without 
-                        [indent] the paragraphs' indent is detected and used.
+                        [indent] each paragraph's indent is detected and used.
 
                         Note: There is a possible unexpected behaviour: If 
                         command is run without [range] (i.e., it's just the 
@@ -109,8 +109,8 @@ or something. The "daily tools" are explained later.
 :[range]AlignCenter [width]                                     *:AlignCenter*
                         Center lines in [range] (default is current line) 
                         between the first column and [width]. All extra 
-                        whitespace characters are truncated but honor 
-                        'joinspaces', just like in :AlignLeft. If [width] is 
+                        whitespace characters are truncated (but honor 
+                        'joinspaces', just like in :AlignLeft). If [width] is 
                         not given the value of 'textwidth' option is used 
                         instead. If 'textwidth' is zero the value of 80 is 
                         used.
@@ -146,9 +146,6 @@ commands: |:left|, |:right| and |:center|.
 ==============================================================================
 3. Default key mappings                            *textformat-keymap-default*
 
-This is the cool stuff as these commands have more magic in them than the ex 
-commands described above.
-
 By default this plugin provides a couple of key mappings for convenient text 
 formatting. If the mappings have already been defined by user (or are taken by 
 other plugins) then some of the following mappings may not be automatically 
@@ -166,14 +163,15 @@ Normal mode (current paragraph) ~
                         and reformat it according to 'textwidth'.
 
 <Leader>ar              Right-align the current "inner paragraph" (see |ip|) 
-                        to margin at 'textwidth'. This does not reformat lines 
-                        because with right-aligned text user usually wants to 
-                        decide exactly what goes to what line.
+                        to margin at 'textwidth'. This does not reformat the 
+                        paragraph because with right-aligned text user usually 
+                        wants to decide exactly what goes to what line.
 
 <Leader>aj              Left-right justify the current "inner paragraph" (see 
-                        |ip|). The paragraph is first reformatted according to 
-                        'textwidth' and then left-right justified. The last 
-                        line is aligned to left.
+                        |ip|). Technically each line's whitespaces are first 
+                        truncated, then the text is reformatted according to 
+                        'textwidth' and finally lines are justified. The last 
+                        line (of each text paragraph) is aligned to left.
 
 <Leader>ac              Center lines of current "inner paragraph" (see |ip|) 
                         between the first column and 'textwidth'. This does 
@@ -192,7 +190,8 @@ Visual mode (range of lines) ~
 {Visual}<Leader>aj      Left-right justify {Visual} lines. First truncate all 
                         extra whitespace characters, then reformat lines so 
                         that they fill 'textwidth' and finally left-right 
-                        justify.
+                        justify. The last line of each paragraph as well as 
+                        the last line in {Visual} range is aligned to left.
 
 {Visual}<Leader>ac      Center {Visual} lines.
 
@@ -203,14 +202,25 @@ sentence ending with a ".", "?" or "!". The first line in each paragraph
 inside the range defines the indent for the rest of the lines in the 
 paragraph, except if 'formatoptions' contains "2" then it's the second line.
 
+
+Paragraph definitions ~
+
+The normal mode commands operate on the concept of "inner paragraph" (see 
+|ip|). The effect is almost the same as selecting current paragraph with Vim's 
+"vip" command and then executing the equivalent visual mode command. Such 
+inner paragraph may contain several text paragraphs if 'formatoptions' 
+contains "w". Each of them is reformatted separately with <Leader>al and 
+<Leader>aj commands.
+
 New paragraph always begins after a blank line. If 'formatoptions' contains 
-"w" then new paragraph also begins after line which ends with a non-whitespace 
-character. That is, with "w" in 'formatoptions' every line which ends with 
-a non-whitespace also ends a paragraph. In left-right justify such line is 
-aligned to left. You need to ensure that there is a trailing whitespace in 
-every consecutive line which belongs to same paragraph (the whitespace is 
-preserved after formatting). If 'formatoptions' does not contain "w" then all 
-consecutive non-blank lines belong to same paragraph.
+"w" then new paragraph also begins after each line which ends with 
+a non-whitespace character. That is, with "w" in 'formatoptions' every line 
+which ends with a non-whitespace also ends a paragraph. In left-right justify 
+(<Leader>aj) such line is aligned to left. You need to ensure that there is 
+a trailing whitespace in every consecutive line which belongs to same 
+paragraph (the whitespace is preserved after formatting). If 'formatoptions' 
+does not contain "w" then all consecutive non-blank lines belong to same 
+paragraph.
 
 ==============================================================================
 4. User key mappings                                  *textformat-keymap-user*
@@ -243,8 +253,9 @@ the right-hand side (<Plug>...) must be remappable. See Vim's manual for more
 information about the key map commands.
 
 Most part of this plugin is loaded into memory when the text-formatting 
-commands or key maps are used for the first time. If you want to completely 
-avoid loading this plugin put the following line in your .vimrc file: >
+commands or key maps are used for the first time. Only the very minimum is 
+automatically loaded when Vim is started. If you want to completely avoid 
+loading this plugin put the following line in your .vimrc file: >
 
         let g:loaded_textformat = 1
 
