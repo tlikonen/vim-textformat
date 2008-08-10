@@ -1,4 +1,4 @@
-*textformat.txt*        Vim Text Formatter  (version 2.0)           2008-08-09
+*textformat.txt*        Vim Text Formatter  (version 2.0)           2008-08-10
 
 
 Description     This plugin provides commands and key mappings to quickly 
@@ -253,7 +253,7 @@ Happy formatting!
 ==============================================================================
 5. Version history                                        *textformat-history*
 
-        v2.0                                                        2008-08-09
+        v2.0                                                        2008-08-10
 
               - \al and \aj now reformat text also in visual mode.
               - \al and \aj honor "w" in 'formatoptions' and detect paragraph 
