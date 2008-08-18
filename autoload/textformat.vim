@@ -265,7 +265,7 @@ function! s:Align_String_Justify(string, width) "{{{1
 	while l:more_spaces > 0
 		if l:more_spaces >= l:string_spaces
 			" More extra spaces are needed than there are spaces
-			" available in the string so we add one more space to
+			" available in the string so we add one more space 
 			" after every word (add 1 to items of space list).
 			for l:i in range(l:string_spaces)
 				let l:space_list[l:i] += 1
@@ -302,7 +302,8 @@ function! s:Align_String_Justify(string, width) "{{{1
 				if l:more_spaces == 0 | break | endif
 			else
 				" Distribute the rest of spaces evenly and
-				" break the loop. All the spaces are added.
+				" break the loop. All the spaces have been
+				" added.
 				for l:i in s:Distributed_Selection(l:space_sentence_full,l:more_spaces)
 					let l:space_list[l:i] +=1
 				endfor
@@ -321,7 +322,8 @@ function! s:Align_String_Justify(string, width) "{{{1
 				if l:more_spaces == 0 | break | endif
 			else
 				" Distribute the rest of spaces evenly and
-				" break the loop. All the spaces are added.
+				" break the loop. All the spaces have been
+				" added.
 				for l:i in s:Distributed_Selection(l:space_sentence_semi,l:more_spaces)
 					let l:space_list[l:i] +=1
 				endfor
@@ -343,7 +345,7 @@ function! s:Align_String_Justify(string, width) "{{{1
 	for l:item in range(l:string_spaces)
 		let l:string .= l:word_list[l:item].repeat(' ',l:space_list[l:item])
 	endfor
-	" Add the last word to the and and return the string.
+	" Add the last word to the end and return the string.
 	return l:string.l:word_list[-1]
 endfunction
 
@@ -412,8 +414,8 @@ function! s:Distributed_Selection(list, pick) "{{{1
 		endfor
 	endif
 
-	" There may be very different number of zeros in the beginning and end
-	" of the list. We count them.
+	" There may be very different number of zeros in the beginning and the
+	" end of the list. We count them.
 	let l:zeros_begin = 0
 	for l:i in l:pick_list
 		if l:i == 0
@@ -433,14 +435,14 @@ function! s:Distributed_Selection(list, pick) "{{{1
 
 	" Then we remove them.
 	if l:zeros_end
-		" Remove 0 items from the end. We need to remove them first
+		" Remove "0" items from the end. We need to remove them first
 		" from the end because list items' index number will change
-		" when items are removed from the beginning. Then it would make
-		" a bit more difficult to remove ending spaces.
+		" when items are removed from the beginning. Then it would be
+		" more difficult to remove trailing zeros.
 		call remove(l:pick_list,len(l:pick_list)-l:zeros_end,-1)
 	endif
 	if l:zeros_begin
-		" Remove 0 items from the beginning.
+		" Remove zero items from the beginning.
 		call remove(l:pick_list,0,l:zeros_begin-1)
 	endif
 	let l:zeros_both = l:zeros_begin + l:zeros_end
