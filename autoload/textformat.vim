@@ -467,9 +467,9 @@ function! s:Distributed_Selection(list, pick) "{{{1
 endfunction
 
 function! s:Retab_Indent(column) "{{{1
-	" column = the left indent column starting from 0
-	" Function returns a string of whitespaces, a mixture of tabs and
-	" spaces depending on the 'expandtab' option.
+	" column = the left indent column starting from 0 Function returns
+	" a string of whitespaces, a mixture of tabs and spaces depending on
+	" the 'expandtab' and 'tabstop' options.
 	if &expandtab
 		" Only spaces
 		return repeat(' ',a:column)
