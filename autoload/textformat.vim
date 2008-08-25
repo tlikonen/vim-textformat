@@ -53,7 +53,7 @@ function! s:Align_Range_Left(...) range "{{{1
 
 			" Paragraph (or the whole line range) begins here so
 			" get the indent of the first line and print the line.
-			let l:leading_ws = s:Retab_Indent(s:Check_Indent(l:line))
+			let l:leading_ws = s:Retab_Indent(indent(l:line))
 			let l:line_replace = s:Align_String_Left(l:line_string)
 			if &formatoptions =~ 'w' && l:line_string =~ '\m\s$'
 				let l:line_replace .= ' '
@@ -69,7 +69,7 @@ function! s:Align_Range_Left(...) range "{{{1
 
 			" If fo=~2 get the indent of the second line
 			if &formatoptions =~ '2'
-				let l:leading_ws = s:Retab_Indent(s:Check_Indent(l:line))
+				let l:leading_ws = s:Retab_Indent(indent(l:line))
 			endif
 
 			" This loop will go through all the lines in the
@@ -140,7 +140,7 @@ function! s:Align_Range_Justify(width, ...) range "{{{1
 
 		" Paragraph (or the whole line range) begins here so
 		" get the indent of the first line and print the line.
-		let l:indent = s:Check_Indent(l:line)
+		let l:indent = indent(l:line)
 		let l:width = a:width - l:indent
 		let l:leading_ws = s:Retab_Indent(l:indent)
 
@@ -163,7 +163,7 @@ function! s:Align_Range_Justify(width, ...) range "{{{1
 
 		" If fo=~2 get the indent of the second line
 		if &formatoptions =~ '2'
-			let l:indent = s:Check_Indent(l:line)
+			let l:indent = indent(l:line)
 			let l:width = a:width - l:indent
 			let l:leading_ws = s:Retab_Indent(l:indent)
 		endif
@@ -464,12 +464,6 @@ function! s:Distributed_Selection(list, pick) "{{{1
 		endif
 	endfor
 	return l:new_list
-endfunction
-
-function! s:Check_Indent(line) "{{{1
-	execute a:line
-	normal! ^
-	return virtcol('.')-1
 endfunction
 
 function! s:Retab_Indent(column) "{{{1
