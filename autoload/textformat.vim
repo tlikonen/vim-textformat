@@ -477,7 +477,7 @@ function! s:Retab_Indent(column) "{{{1
 		" Tabs and spaces
 		let l:tabs = a:column / &tabstop
 		let l:spaces = a:column % &tabstop
-		return repeat(nr2char(9),l:tabs).repeat(' ',l:spaces)
+		return repeat("\<Tab>",l:tabs).repeat(' ',l:spaces)
 	endif
 endfunction
 
