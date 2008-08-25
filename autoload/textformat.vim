@@ -37,7 +37,7 @@ function! s:Align_Range_Left(...) range "{{{1
 			endif
 		endfor
 	else
-		" The parameter was not given so we detect each paragraphs'
+		" The parameter was not given so we detect each paragraph's
 		" indent.
 		let l:line = a:firstline
 		while l:line <= a:lastline
