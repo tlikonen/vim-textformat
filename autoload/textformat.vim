@@ -578,7 +578,7 @@ function! textformat#Align_Command(align, ...) range "{{{1
 	" For left align the optional parameter a:1 is [indent]. For others
 	" it's [width].
 	let l:pos = getpos('.')
-	if a:align == 'left'
+	if a:align ==? 'left'
 		if a:0 && a:1 >= 0
 			execute a:firstline.','.a:lastline.'call s:Align_Range_Left('.a:1.')'
 		else
@@ -593,11 +593,11 @@ function! textformat#Align_Command(align, ...) range "{{{1
 			let l:width = s:default_width
 		endif
 
-		if a:align == 'right'
+		if a:align ==? 'right'
 			execute a:firstline.','.a:lastline.'call s:Align_Range_Right('.l:width.')'
-		elseif a:align == 'justify'
+		elseif a:align ==? 'justify'
 			execute a:firstline.','.a:lastline.'call s:Align_Range_Justify('.l:width.')'
-		elseif a:align == 'center'
+		elseif a:align ==? 'center'
 			execute a:firstline.','.a:lastline.'call s:Align_Range_Center('.l:width.')'
 		endif
 	endif
