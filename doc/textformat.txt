@@ -1,4 +1,4 @@
-*textformat.txt*        Vim Text Formatter  (version 2.0)           2008-08-10
+*textformat.txt*        Vim Text Formatter  (version 2.1)           2008-09-13
 
 
 Description     This plugin provides commands and key mappings to quickly 
@@ -262,6 +262,10 @@ Happy formatting!
 
 ==============================================================================
 5. Version history                                        *textformat-history*
+
+        v2.1                                                        2008-09-13
+
+              - Minor internal cleanup.
 
         v2.0                                                        2008-08-10
 
