@@ -253,7 +253,7 @@ function! s:Align_String_Justify(string, width) "{{{1
 	" Ok, there are more than one word in the string so we get to do some
 	" real work...
 
-	" Make a list of which each item represent a space available in the
+	" Make a list where each item represent a space available in the
 	" string. The value means how many spaces there are. At the moment set
 	" every list item to one: [1, 1, 1, 1, ...]
 	let l:space_list = []
@@ -467,9 +467,9 @@ function! s:Distributed_Selection(list, pick) "{{{1
 endfunction
 
 function! s:Retab_Indent(column) "{{{1
-	" column = the left indent column starting from 0 Function returns
-	" a string of whitespaces, a mixture of tabs and spaces depending on
-	" the 'expandtab' and 'tabstop' options.
+	" column = the left indent column starting from 0
+	" Function returns a string of whitespaces, a mixture of tabs and
+	" spaces depending on the 'expandtab' and 'tabstop' options.
 	if &expandtab
 		" Only spaces
 		return repeat(' ',a:column)
