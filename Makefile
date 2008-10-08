@@ -1,5 +1,3 @@
-#!/usr/bin/make -f
-
 NAME := textformat
 FILES := */$(NAME).*
 
