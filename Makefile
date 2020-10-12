@@ -1,16 +1,16 @@
 NAME := textformat
 FILES := */$(NAME).*
 
-$(NAME).vba.gz: $(NAME).vba
+$(NAME).vmb.gz: $(NAME).vmb
 	gzip -9 --stdout $^ >$@
 
-$(NAME).vba: $(FILES)
+$(NAME).vmb: $(FILES)
 	printf "%s\n" $^ | vim \
 		-c 'let g:vimball_home="."' \
 		-c 'silent! 1,$$MkVimball! $(NAME)' \
 		-c 'qa!' -
 
 clean:
-	rm -f *.vba *.vba.gz
+	rm -f *.vmb *.vmb.gz
 
 .PHONY: clean
