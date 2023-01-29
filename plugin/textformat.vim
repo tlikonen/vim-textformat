@@ -1,9 +1,11 @@
 " Text formatter plugin for Vim text editor
 "
-" Version:              2.1
-" Last Change:          2008-09-13
-" Maintainer:           Teemu Likonen <tlikonen@iki.fi>
-" License:              This file is placed in the public domain.
+" Version:      2.1
+" Last Change:  2008-09-13
+" Maintainer:   Teemu Likonen <tlikonen@iki.fi>
+" License:      Creative Commons CC0 (public domain dedication)
+"               https://creativecommons.org/publicdomain/zero/1.0/legalcode
+"
 " GetLatestVimScripts:  2324 1 :AutoInstall: TextFormat
 
 "{{{1 The beginning stuff
